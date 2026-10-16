@@ -1,0 +1,3548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MC10 Config — FM3 Controller</title>
+<style>
+:root{
+  
+  --lap:#E4E7E3;        
+  --panel:#FFFFFF;
+  --panel-2:#F3F5F2;
+  --vonal:#C3C8C0;
+  --vonal-eros:#8E958B;
+  --tinta:#191C19;
+  --tinta-halk:#5C635A;
+  --keszulek:#2B2E2B;   
+  --keszulek-2:#3A3E3A;
+  --jelzo:#B4442E;      
+  --ok:#2F6B4F;
+  --r:3px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--lap);
+  color:var(--tinta);
+  font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  padding:0 0 3rem;
+}
+.mono{font-family:ui-monospace,"Cascadia Mono",Consolas,"DejaVu Sans Mono",monospace}
+
+
+header{
+  background:var(--panel);
+  border-bottom:1px solid var(--vonal-eros);
+  padding:.7rem 1.1rem;
+  display:flex;align-items:center;gap:1rem;flex-wrap:wrap;
+  position:sticky;top:0;z-index:20;
+}
+h1{
+  font-size:15px;font-weight:650;margin:0;letter-spacing:.02em;
+  display:flex;align-items:baseline;gap:.55rem;
+}
+h1 small{font-size:11.5px;font-weight:400;color:var(--tinta-halk);letter-spacing:.06em;text-transform:uppercase}
+.tolt{margin-left:auto;display:flex;gap:.4rem;flex-wrap:wrap}
+button{
+  font:inherit;font-size:13px;
+  background:var(--panel-2);color:var(--tinta);
+  border:1px solid var(--vonal-eros);border-radius:var(--r);
+  padding:.34rem .72rem;cursor:pointer;
+}
+button:hover{background:#E9ECE8}
+button:focus-visible,select:focus-visible,input:focus-visible{outline:2px solid var(--tinta);outline-offset:1px}
+button.fo{background:var(--tinta);color:var(--lap);border-color:var(--tinta)}
+button.fo:hover{background:#000}
+
+
+.fulek{display:flex;gap:0;border:1px solid var(--vonal-eros);border-radius:var(--r);overflow:hidden}
+.fulek button{border:0;border-radius:0;padding:.34rem .95rem;background:var(--panel-2)}
+.fulek button[aria-pressed="true"]{background:var(--tinta);color:var(--lap)}
+
+.rogzitett{
+  font-size:12px;color:var(--tinta-halk);
+  border-left:2px solid var(--vonal-eros);padding-left:.6rem;
+}
+
+
+main{max-width:1180px;margin:0 auto;padding:1.2rem 1.1rem 0}
+.rács{display:grid;grid-template-columns:1fr;gap:.55rem}
+
+
+.sor{display:grid;grid-template-columns:repeat(5,1fr);gap:.55rem}
+.kartya{
+  background:var(--panel);
+  border:1px solid var(--vonal);
+  border-radius:var(--r);
+  padding:.5rem .55rem;
+  display:flex;flex-direction:column;gap:.35rem;
+  min-height:104px;
+}
+.kartya.hiba{border-color:var(--jelzo);box-shadow:inset 0 0 0 1px var(--jelzo)}
+.kfej{display:flex;align-items:center;gap:.4rem;font-size:11px;color:var(--tinta-halk);letter-spacing:.08em}
+.kfej b{
+  font-size:11px;font-weight:650;color:var(--tinta);
+  background:var(--panel-2);border:1px solid var(--vonal);
+  border-radius:2px;padding:.05rem .3rem;min-width:19px;text-align:center;
+}
+.akcio{
+  display:flex;align-items:center;gap:.4rem;
+  background:var(--panel-2);border:1px solid var(--vonal);border-radius:2px;
+  padding:.26rem .34rem;font-size:12.5px;cursor:pointer;text-align:left;width:100%;
+}
+.akcio:hover{background:#E9ECE8}
+.akcio .pont{width:9px;height:9px;border-radius:50%;flex:0 0 auto;border:1px solid rgba(0,0,0,.35)}
+.akcio .nev{flex:1;font-weight:550;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.akcio .cc{font-size:11px;color:var(--tinta-halk)}
+.akcio.ures{color:var(--tinta-halk);font-style:italic;font-weight:400}
+.cimke{font-size:10px;letter-spacing:.09em;color:var(--tinta-halk);text-transform:uppercase}
+
+
+.keszulek-doboz{
+  background:var(--keszulek);
+  border:1px solid #141614;
+  border-radius:6px;
+  padding:.9rem;
+  display:flex;justify-content:center;
+}
+svg.mc10{width:100%;max-width:1000px;height:auto;display:block}
+
+
+.kombok{
+  margin-top:.55rem;background:var(--panel);border:1px solid var(--vonal);
+  border-radius:var(--r);padding:.6rem .75rem;
+}
+.kombok h2{
+  font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-halk);
+  margin:0 0 .5rem;font-weight:600;display:flex;align-items:baseline;gap:.5rem;
+}
+.kombok h2 small{font-size:10.5px;letter-spacing:.04em;text-transform:none;font-weight:400}
+.kombo-rács{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem}
+.kombo{
+  background:var(--panel-2);border:1px solid var(--vonal);border-radius:2px;
+  padding:.4rem .5rem;display:flex;flex-direction:column;gap:.25rem;
+  cursor:pointer;text-align:left;font:inherit;color:inherit;
+}
+.kombo:hover{background:#E9ECE8}
+.kombo.zart{cursor:default;opacity:.72}
+.kombo.zart:hover{background:var(--panel-2)}
+.kombo .par{
+  font-family:ui-monospace,Consolas,monospace;font-size:12px;font-weight:650;
+  display:flex;align-items:center;gap:.35rem;
+}
+.kombo .par .lakat{font-size:10px;color:var(--tinta-halk);font-weight:400}
+.kombo .mit{font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.kombo .cc{font-size:11px;color:var(--tinta-halk);font-family:ui-monospace,monospace}
+@media (max-width:840px){ .kombo-rács{grid-template-columns:repeat(2,1fr)} }
+
+.kij-rács{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.5rem}
+.kij-tetel{
+  background:var(--panel-2);border:1px solid var(--vonal);border-radius:2px;
+  padding:.4rem .5rem;display:flex;flex-direction:column;gap:.3rem;
+}
+.kij-tetel label{font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--tinta-halk)}
+.kij-tetel .sor{display:flex;align-items:center;gap:.4rem}
+.kij-tetel input[type=text]{
+  font:inherit;font-size:13px;padding:.22rem .35rem;border:1px solid var(--vonal-eros);
+  border-radius:2px;background:var(--panel);color:var(--tinta);width:100%;
+  font-family:ui-monospace,Consolas,monospace;
+}
+.kij-tetel input[type=color]{width:34px;height:26px;padding:1px;border:1px solid var(--vonal-eros);
+  border-radius:2px;background:var(--panel);cursor:pointer;flex:0 0 auto}
+.kij-tetel select{font:inherit;font-size:13px;padding:.22rem .3rem;border:1px solid var(--vonal-eros);
+  border-radius:2px;background:var(--panel);color:var(--tinta)}
+.kij-tetel .px{font-size:11px;color:var(--tinta-halk);font-family:ui-monospace,monospace;white-space:nowrap}
+.kij-tetel.baj input[type=text]{border-color:var(--jelzo)}
+
+
+.ell{
+  margin-top:.55rem;background:var(--panel);border:1px solid var(--vonal);
+  border-radius:var(--r);padding:.6rem .75rem;font-size:13px;
+}
+.ell h2{font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--tinta-halk);margin:0 0 .35rem;font-weight:600}
+.ell ul{margin:0;padding-left:1.05rem}
+.ell li{margin:.12rem 0}
+.ell li.baj{color:var(--jelzo)}
+.ell li.figyelem{color:#8A6A1F}
+.ell .rendben{color:var(--ok);display:flex;align-items:center;gap:.4rem}
+
+
+dialog{
+  border:1px solid var(--vonal-eros);border-radius:var(--r);
+  padding:0;max-width:520px;width:calc(100% - 2rem);
+  background:var(--panel);color:var(--tinta);
+}
+dialog::backdrop{background:rgba(20,24,20,.45)}
+.dfej{
+  display:flex;align-items:center;gap:.6rem;
+  padding:.7rem .9rem;border-bottom:1px solid var(--vonal);
+}
+.dfej h3{margin:0;font-size:14px;font-weight:650}
+.dfej .zar{margin-left:auto}
+.dtest{padding:.85rem .9rem;display:grid;gap:.6rem}
+.mezo{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:.6rem}
+.mezo label{font-size:12.5px;color:var(--tinta-halk)}
+.mezo input,.mezo select{
+  font:inherit;font-size:13px;padding:.28rem .4rem;
+  border:1px solid var(--vonal-eros);border-radius:2px;background:var(--panel);color:var(--tinta);width:100%;
+}
+.mezo input[type=color]{padding:1px;height:30px;cursor:pointer}
+.mezo .ketto{display:flex;gap:.4rem}
+.dlab{padding:.7rem .9rem;border-top:1px solid var(--vonal);display:flex;gap:.45rem;justify-content:flex-end}
+.sugo{font-size:11.5px;color:var(--tinta-halk);grid-column:1/-1;margin-top:-.3rem}
+
+
+.kimenet{
+  width:100%;min-height:230px;font-family:ui-monospace,Consolas,monospace;font-size:12px;
+  border:1px solid var(--vonal-eros);border-radius:2px;padding:.6rem;background:#FAFBF9;color:var(--tinta);
+  white-space:pre;overflow:auto;
+}
+@media (max-width:840px){
+  .sor{grid-template-columns:repeat(2,1fr)}
+  .mezo{grid-template-columns:1fr}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<header>
+  <h1>MC10 Config <small id="verzioCimke">FM3 Controller</small></h1>
+
+  <span class="rogzitett">The looper mode layout is fixed — not editable.</span>
+  <span class="rogzitett" id="wsAllapot" style="color:#0b6; font-weight:bold"></span>
+
+  <div class="tolt">
+    <button id="btnImport">Open a config file</button>
+    <button id="btnKapcs">Connect pedal</button>
+    <button id="btnLista">Configs on pedal</button>
+    <button id="btnOlvas">Read from pedal</button>
+    <button id="btnKuld" class="fo">Send to pedal</button>
+    <button id="btnUjra">Restart pedal</button>
+    <button id="btnIni">Save config for pedal</button>
+    <input type="file" id="fajl" accept=".txt,.TXT" hidden>
+  </div>
+</header>
+
+<main>
+  <div class="rács">
+
+    
+    <div class="sor" id="sorFelso"></div>
+
+    
+    <div class="keszulek-doboz">
+      <svg class="mc10" viewBox="0 0 2640 900" xmlns="http://www.w3.org/2000/svg"
+           role="img" aria-label="MC10 preview, with live display preview">
+        <defs>
+          <linearGradient id="hazFeny" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#41453F"/>
+            <stop offset="1" stop-color="#24271F"/>
+          </linearGradient>
+        </defs>
+
+        
+        <rect x="10" y="10" width="2620" height="880" rx="18" fill="url(#hazFeny)"
+              stroke="#12140F" stroke-width="3"/>
+        <rect x="10" y="10" width="2620" height="14" rx="7" fill="#5A5F53" opacity=".45"/>
+
+        
+        <text x="330"  y="82" fill="#9AA098" font-size="34" font-family="ui-monospace,monospace">USB</text>
+        <text x="600"  y="82" fill="#9AA098" font-size="34" font-family="ui-monospace,monospace">DC 9V</text>
+        <text x="980"  y="82" fill="#9AA098" font-size="34" font-family="ui-monospace,monospace">MIDI OUT</text>
+        <text x="1560" y="82" fill="#9AA098" font-size="34" font-family="ui-monospace,monospace">MIDI IN</text>
+        <text x="2010" y="82" fill="#9AA098" font-size="34" font-family="ui-monospace,monospace">EXP1</text>
+        <text x="2290" y="82" fill="#9AA098" font-size="34" font-family="ui-monospace,monospace">EXP2</text>
+
+        
+        <text x="230" y="480" fill="#C9CDC7" font-size="86" font-weight="600"
+              font-family="system-ui,sans-serif" letter-spacing="6">MIDI</text>
+        <text x="230" y="570" fill="#C9CDC7" font-size="62" font-weight="300"
+              font-family="system-ui,sans-serif" letter-spacing="4">CAPTAIN</text>
+
+        
+        <circle cx="1620" cy="448" r="128" fill="#1B1D18" stroke="#3E423A" stroke-width="4"/>
+        <circle cx="1620" cy="448" r="112" fill="#232620"/>
+
+        
+        
+        <g id="kijelzo" transform="translate(858,262) scale(1.55)">
+          <rect x="-7" y="-7" width="254" height="254" rx="6" fill="#0A0C0A" stroke="#6E746C" stroke-width="2.4"/>
+          <svg id="kijelzoTartalom" x="0" y="0" width="240" height="240" viewBox="0 0 240 240"></svg>
+        </g>
+
+        
+        <g id="gombok"></g>
+      </svg>
+    </div>
+
+    
+    <div class="sor" id="sorAlso"></div>
+
+  </div>
+
+  <div class="kombok kijelzo-szerk">
+    <h2>Display <small>labels, sizes, colours</small></h2>
+    <div class="kij-rács" id="kijLista"></div>
+  </div>
+
+  <div class="kombok">
+    <h2>Start-up <small>at power-on</small></h2>
+    <div class="kij-rács" id="indulasLista"></div>
+  </div>
+
+  <div class="kombok">
+    <h2>Display rows <small>positions and labels</small></h2>
+    <div class="kij-rács" id="sorokLista"></div>
+  </div>
+
+  <div class="kombok">
+    <h2>MIDI <small>channel and CC numbers</small></h2>
+    <div class="kij-rács" id="midiLista"></div>
+  </div>
+
+  <style>
+    .hibasMezo { border: 2px solid #b00020 !important; background: #fff5f6; }
+    .akcio.hibasSor { outline: 2px solid #b00020; outline-offset: -2px; background: #fff5f6; }
+    .hibaSor { color: #b00020; font-weight: 600; }
+    .ellFej { margin: 10px 0 2px; font-size: 12px; letter-spacing: .04em; color: #777; }
+    .ellFej.baj { color: #b00020; font-weight: 600; }
+    button:disabled { opacity: .45; cursor: not-allowed; }
+    .wsdoboz { padding: 2px 0; }
+    .wsallapot { display: block; width: 100%; white-space: normal; font-size: 13px;
+                 font-weight: 600; color: #12a06a; padding: 8px 2px 2px; }
+    table.wslista { width: 100%; border-collapse: collapse; }
+    table.wslista td { padding: 5px 0; border-top: 1px solid #ececec; vertical-align: middle; }
+    table.wslista tr:first-child td { border-top: 0; }
+    table.wslista td.mi { padding-left: 12px; border-left: 3px solid transparent; }
+    table.wslista tr.aktiv td { background: #f2f8f4; }
+    table.wslista tr.aktiv td.mi { border-left-color: #12a06a; }
+    
+    table.wslista .nev    { font-size: 15px; font-weight: 600; }
+    table.wslista td.fajlcella { text-align: right; white-space: nowrap; width: 1%; padding-right: 14px; }
+    table.wslista .fajl   { font-family: ui-monospace, "DejaVu Sans Mono", monospace; font-size: 12px; color: #8a8a8a; }
+    
+    
+    table.wslista .wsaktiv { font-size: 12px; color: #12a06a; margin-left: 10px;
+                             text-transform: none; letter-spacing: 0; }
+    table.wslista td.gombok { text-align: right; white-space: nowrap; width: 1%; padding-right: 2px; }
+    table.wslista td.gombok button { margin-left: 6px; }
+  </style>
+
+  <div class="kombok">
+    <h2>Configs on the pedal <small>up to 10 — Edit loads one here, Overwrite replaces it with the current layout, Use this picks it for start-up (needs a restart)</small></h2>
+    <div id="wsLista" class="wsdoboz"><span class="px">Click “Configs on pedal” to read the list.</span></div>
+    <div id="wsAllapot2" class="wsallapot"></div>
+  </div>
+
+  <div class="kombok">
+    <h2>Channel switching <small>two channels, each on two switch pairs</small></h2>
+    <div class="kij-rács" id="csatLista"></div>
+  </div>
+
+  <div class="kombok">
+    <h2>Combos <small>two switches at once</small></h2>
+    <div class="kombo-rács" id="komboLista"></div>
+  </div>
+
+  <div class="ell">
+    <h2>Checks</h2>
+    <div id="ellTartalom"></div>
+  </div>
+</main>
+
+
+<dialog id="szerk">
+  <form method="dialog">
+    <div class="dfej">
+      <h3 id="szerkCim">Action</h3>
+      <button class="zar" value="megse" type="submit">Close</button>
+    </div>
+    <div class="dtest">
+      <div class="mezo">
+        <label for="mNev">Label</label>
+        <input id="mNev" type="text" maxlength="14">
+      </div>
+      <p class="sugo" id="sugoNev"></p>
+
+      <div class="mezo" id="mBlokkSor">
+        <label for="mBlokk">FM3 block</label>
+        <select id="mBlokk"></select>
+      </div>
+      <p class="sugo" id="sugoBlokk"></p>
+
+      <div class="mezo">
+        <label for="mTipus">What it does</label>
+        <select id="mTipus">
+          <option value="toggle">On/off toggle</option>
+          <option value="momentary">Single send</option>
+          <option value="scene">Scene select</option>
+          <option value="tap">Tap tempo</option>
+          <option value="looper">Looper control</option>
+          <option value="none">Does nothing</option>
+        </select>
+        <p class="sugo" id="sugoTipus"></p>
+      </div>
+
+      <div class="mezo">
+        <label for="mCC">CC number</label>
+        <div class="ketto">
+          <input id="mCC" type="number" min="0" max="127">
+          <input id="mOn"  type="number" min="0" max="127" title="On value">
+          <input id="mOff" type="number" min="0" max="127" title="Off value">
+        </div>
+      </div>
+      <p class="sugo">The three fields: CC number, on value, off value.</p>
+
+      <div class="mezo">
+        <label for="mCC2">Extra CCs</label>
+        <div class="ketto">
+          <input id="mCC2" type="number" min="0" max="127" placeholder="—">
+          <input id="mCC3" type="number" min="0" max="127" placeholder="—">
+        </div>
+      </div>
+      <p class="sugo">If the switch <b>several blocks</b> at once — for example Delay&nbsp;1 and Delay&nbsp;2. They get the same value. The LED and the grid box follow the first CC.</p>
+
+      <div class="mezo">
+        <label for="mSzin">LED colour</label>
+        <div class="ketto">
+          <input id="mSzin" type="color">
+          <input id="mSzinKi" type="color" title="Off (standby) colour">
+        </div>
+      </div>
+      <p class="sugo">Left: on. Right: standby — in looper mode this is the dim glow.</p>
+
+      <div class="mezo">
+        <label for="mNevKi">Off label</label>
+        <input id="mNevKi" type="text" maxlength="14" placeholder="empty = NAME OFF">
+      </div>
+      <p class="sugo">If the off state has its own name (HALF ↔ FULL). Left empty, the display shows “NAME ON” and “NAME OFF”.</p>
+
+      <div class="mezo">
+        <label for="mRacs">Grid box</label>
+        <select id="mRacs">
+          <option value="-1">none</option>
+          <option value="0">top left</option>
+          <option value="1">top centre</option>
+          <option value="2">top right</option>
+          <option value="3">bottom left</option>
+          <option value="4">bottom centre</option>
+          <option value="5">bottom right</option>
+        </select>
+      </div>
+
+      <div class="mezo" id="mezoPress">
+        <label for="mPress">When it fires</label>
+        <select id="mPress">
+          <option value="false">On release</option>
+          <option value="true">On press</option>
+        </select>
+      </div>
+      <p class="sugo" id="sugoPress"></p>
+      <p class="sugo hibaSor" id="mezoHibaSor" style="display:none"></p>
+    </div>
+    <div class="dlab">
+      <button value="megse" type="submit">Cancel</button>
+      <button value="ok" type="submit" class="fo">Save</button>
+    </div>
+  </form>
+</dialog>
+
+
+<dialog id="komboSzerk">
+  <form method="dialog">
+    <div class="dfej">
+      <h3 id="komboCim">Combo</h3>
+      <button class="zar" value="megse" type="submit">Close</button>
+    </div>
+    <div class="dtest">
+      <div class="mezo">
+        <label for="kPar">Switch pair</label>
+        <select id="kPar"></select>
+      </div>
+      <p class="sugo" id="kSugoPar"></p>
+
+      <div class="mezo">
+        <label for="kNev">Label</label>
+        <input id="kNev" type="text" maxlength="14">
+      </div>
+
+      <div class="mezo">
+        <label for="kTipus">What it does</label>
+        <select id="kTipus">
+          <option value="toggle">Toggles between two values</option>
+          <option value="momentary">Single send</option>
+        </select>
+      </div>
+
+      <div class="mezo">
+        <label for="kCC">CC number</label>
+        <div class="ketto">
+          <input id="kCC" type="number" min="0" max="127">
+          <input id="kOn"  type="number" min="0" max="127" title="On value">
+          <input id="kOff" type="number" min="0" max="127" title="Off value">
+        </div>
+      </div>
+      <p class="sugo" id="kSugoCC">CC number, then the two values it alternates. For the amp channel for example 0 and 1 (channel A and B).</p>
+
+      <div class="mezo">
+        <label for="kNevKi">Off label</label>
+        <input id="kNevKi" type="text" maxlength="14" placeholder="empty = same">
+      </div>
+
+      <div id="kSlotBlokk">
+      <div class="mezo">
+        <label for="kSlot">Info row slot</label>
+        <select id="kSlot">
+          <option value="-1">none</option>
+          <option value="0">slot 1</option>
+          <option value="1">slot 2</option>
+          <option value="2">slot 3</option>
+        </select>
+      </div>
+      <div class="mezo">
+        <label for="kStat">Slot label</label>
+        <div class="ketto">
+          <input id="kStat" type="text" maxlength="6" placeholder="on">
+          <input id="kStatKi" type="text" maxlength="6" placeholder="off">
+        </div>
+      </div>
+      <p class="sugo">Stays on the bottom row of the display. Keep it short — three slots share 157 px.</p>
+      </div>
+      <p class="sugo" id="kSlotHelyett"></p>
+    </div>
+    <div class="dlab">
+      <button value="megse" type="submit">Cancel</button>
+      <button value="ok" type="submit" class="fo">Save</button>
+    </div>
+  </form>
+</dialog>
+
+
+<script>
+const ALAP_KONFIG = {
+ "normal": [
+  {
+   "short": {
+    "name": "DRIVE",
+    "type": "toggle",
+    "cc": 37,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 0,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "COMP",
+    "type": "toggle",
+    "cc": 38,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     255,
+     255,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 3,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "CHORUS",
+    "type": "toggle",
+    "cc": 41,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     0,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "FLANGER",
+    "type": "toggle",
+    "cc": 42,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 4,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "DELAY",
+    "type": "toggle",
+    "cc": 40,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     0,
+     255,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 2,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "REVERB",
+    "type": "toggle",
+    "cc": 43,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     50,
+     0,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 5,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "TAP",
+    "type": "tap",
+    "cc": 14,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     255,
+     128,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": true,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "PRESET+",
+    "type": "momentary",
+    "cc": 90,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     30,
+     30,
+     30
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 1,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "SCENE 1",
+    "type": "scene",
+    "cc": 34,
+    "on": 0,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "SCENE 5",
+    "type": "scene",
+    "cc": 34,
+    "on": 4,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "SCENE 2",
+    "type": "scene",
+    "cc": 34,
+    "on": 1,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "SCENE 6",
+    "type": "scene",
+    "cc": 34,
+    "on": 5,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "SCENE 3",
+    "type": "scene",
+    "cc": 34,
+    "on": 2,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "SCENE 7",
+    "type": "scene",
+    "cc": 34,
+    "on": 6,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "SCENE 4",
+    "type": "scene",
+    "cc": 34,
+    "on": 3,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": true,
+   "long": {
+    "name": "SCENE 8",
+    "type": "scene",
+    "cc": 34,
+    "on": 7,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "short": {
+    "name": "PRESET-",
+    "type": "momentary",
+    "cc": 91,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     30,
+     30,
+     30
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": -1,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  }
+ ],
+ "looper": [
+  {
+   "short": {
+    "name": "",
+    "type": "none",
+    "cc": 0,
+    "on": 0,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "REVERSE",
+    "type": "toggle",
+    "cc": 24,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     255,
+     255,
+     0
+    ],
+    "colorOff": [
+     30,
+     30,
+     0
+    ],
+    "hold": 0,
+    "grid": 0,
+    "delta": 0,
+    "press": true,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "HALF",
+    "type": "toggle",
+    "cc": 25,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     0,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     30,
+     30
+    ],
+    "hold": 0,
+    "grid": 1,
+    "delta": 0,
+    "press": true,
+    "group": 0,
+    "nameOff": "FULL"
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "ERASE",
+    "type": "looper",
+    "cc": 23,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     200,
+     90,
+     20
+    ],
+    "colorOff": [
+     44,
+     20,
+     4
+    ],
+    "hold": 300,
+    "grid": 2,
+    "delta": 0,
+    "press": true,
+    "group": 4,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "",
+    "type": "none",
+    "cc": 0,
+    "on": 0,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "",
+    "type": "none",
+    "cc": 0,
+    "on": 0,
+    "off": 0,
+    "colorOn": [
+     0,
+     0,
+     0
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "REC",
+    "type": "looper",
+    "cc": 20,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     255,
+     0,
+     0
+    ],
+    "colorOff": [
+     30,
+     0,
+     0
+    ],
+    "hold": 0,
+    "grid": 3,
+    "delta": 0,
+    "press": true,
+    "group": 1,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "PLAY",
+    "type": "looper",
+    "cc": 21,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     0,
+     255,
+     0
+    ],
+    "colorOff": [
+     0,
+     30,
+     0
+    ],
+    "hold": 0,
+    "grid": 4,
+    "delta": 0,
+    "press": true,
+    "group": 2,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "STOP",
+    "type": "looper",
+    "cc": 22,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     80,
+     160,
+     255
+    ],
+    "colorOff": [
+     9,
+     19,
+     30
+    ],
+    "hold": 300,
+    "grid": 5,
+    "delta": 0,
+    "press": true,
+    "group": 3,
+    "nameOff": ""
+   },
+   "hasLong": false
+  },
+  {
+   "short": {
+    "name": "ONCE",
+    "type": "momentary",
+    "cc": 26,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     36,
+     72,
+     114
+    ],
+    "colorOff": [
+     9,
+     19,
+     30
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": true,
+    "group": 0,
+    "nameOff": ""
+   },
+   "hasLong": false
+  }
+ ],
+ "combos": [
+  {
+   "a": 4,
+   "b": 9,
+   "slot": 2,
+   "statusOn": "LP",
+   "statusOff": "LP",
+   "nameOff": "LOOPER OFF",
+   "activeInLooperMode": true,
+   "showStateOnLeds": true,
+   "statusColor": 63519,
+   "statusColorOff": 33808,
+   "act": {
+    "name": "LOOPER ON",
+    "type": "toggle",
+    "cc": 27,
+    "on": 127,
+    "off": 0,
+    "colorOn": [
+     40,
+     90,
+     160
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "a": 0,
+   "b": 5,
+   "slot": -1,
+   "statusOn": "",
+   "statusOff": "",
+   "nameOff": "NORMAL MOD",
+   "activeInLooperMode": false,
+   "showStateOnLeds": false,
+   "statusColor": 0,
+   "statusColorOff": 0,
+   "act": {
+    "name": "LOOPER MOD",
+    "type": "modeToggle",
+    "cc": 0,
+    "on": 0,
+    "off": 0,
+    "colorOn": [
+     255,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "a": 5,
+   "b": 6,
+   "slot": 0,
+   "statusOn": "Amp:B",
+   "statusOff": "Amp:A",
+   "nameOff": "AMP CH A",
+   "activeInLooperMode": false,
+   "showStateOnLeds": false,
+   "statusColor": 0,
+   "statusColorOff": 0,
+   "act": {
+    "name": "AMP CH B",
+    "type": "toggle",
+    "cc": 101,
+    "on": 1,
+    "off": 0,
+    "colorOn": [
+     255,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "a": 6,
+   "b": 7,
+   "slot": 0,
+   "statusOn": "Amp:D",
+   "statusOff": "Amp:C",
+   "nameOff": "AMP CH C",
+   "activeInLooperMode": false,
+   "showStateOnLeds": false,
+   "statusColor": 0,
+   "statusColorOff": 0,
+   "act": {
+    "name": "AMP CH D",
+    "type": "toggle",
+    "cc": 101,
+    "on": 3,
+    "off": 2,
+    "colorOn": [
+     255,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "a": 7,
+   "b": 8,
+   "slot": 1,
+   "statusOn": "Dly:B",
+   "statusOff": "Dly:A",
+   "nameOff": "DLY CH A",
+   "activeInLooperMode": false,
+   "showStateOnLeds": false,
+   "statusColor": 0,
+   "statusColorOff": 0,
+   "act": {
+    "name": "DLY CH B",
+    "type": "toggle",
+    "cc": 102,
+    "on": 1,
+    "off": 0,
+    "colorOn": [
+     255,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  },
+  {
+   "a": 8,
+   "b": 9,
+   "slot": 1,
+   "statusOn": "Dly:D",
+   "statusOff": "Dly:C",
+   "nameOff": "DLY CH C",
+   "activeInLooperMode": false,
+   "showStateOnLeds": false,
+   "statusColor": 0,
+   "statusColorOff": 0,
+   "act": {
+    "name": "DLY CH D",
+    "type": "toggle",
+    "cc": 102,
+    "on": 3,
+    "off": 2,
+    "colorOn": [
+     255,
+     255,
+     255
+    ],
+    "colorOff": [
+     0,
+     0,
+     0
+    ],
+    "hold": 300,
+    "grid": -1,
+    "delta": 0,
+    "press": false,
+    "group": 0,
+    "nameOff": ""
+   }
+  }
+ ],
+ "grid": {
+  "normal": [
+   "DRV",
+   "CHO",
+   "DLY",
+   "CMP",
+   "FLG",
+   "REV"
+  ],
+  "looper": [
+   "REV",
+   "HALF",
+   "ERASE",
+   "REC",
+   "PLAY",
+   "STOP"
+  ]
+ },
+ "timing": {
+  "debounce": 20,
+  "long": 500,
+  "combo": 150,
+  "idlePct": 12
+ },
+ "indulas": {
+    ugras: false,
+    notsync: true,
+    nincsSzin: "#000000",
+    nincsJelzes: "#ff0000",
+    nincsVillanas: 3,
+    nincsIdo: 80,
+  "preset": 392,
+  "bpm": 120
+ },
+ "figyelo": {
+  "be": true,
+  "utem": 300,
+  "csendes": true
+ },
+ "sorok": {
+  "info1": 88,
+  "info2": 108,
+  "presetNev": 128,
+  "sceneNev": 158
+ },
+ "feliratok": {
+  "amp": [
+   "Amp Ch:A",
+   "Amp Ch:B",
+   "Amp Ch:C",
+   "Amp Ch:D"
+  ],
+  "dly": [
+   "Dly Ch:A",
+   "Dly Ch:B",
+   "Dly Ch:C",
+   "Dly Ch:D"
+  ],
+  "looperBe": "Looper On",
+  "looperKi": "Looper Off"
+ },
+ "vol": {
+  "felirat1": "Vol1",
+  "felirat2": "Vol2",
+  "szinFelirat": 65535,
+  "szinAktiv": 65535,
+  "szinTetlen": 25388
+ },
+ "kijelzo": {
+  "racsCimkek": [
+   "DRV",
+   "CHO",
+   "DLY",
+   "CMP",
+   "FLG",
+   "REV"
+  ],
+  "meretek": {
+   "racs": 2,
+   "presetNev": 2,
+   "sceneNev": 3,
+   "info": 2
+  },
+  "szinek": {
+   "racsBeHatter": 65535,
+   "racsBeSzoveg": 0,
+   "racsKiHatter": 0,
+   "racsKiSzoveg": 65535,
+   "presetNev": 2016,
+   "sceneNev": 65504,
+   "presetSzam": 32127,
+   "bpm": 64576,
+   "info": 2047,
+   "nincsBlokk": 33808,
+   "athuzas": 63488
+  }
+ },
+ "midi": {
+  "channel": 1,
+  "ampCh": 101, "dlyCh": 102, "loopBypass": 27,
+  "loopRec": 20, "loopPlay": 21, "loopStop": 22, "loopUndo": 23,
+  "loopReverse": 24, "loopHalf": 25, "loopOnce": 26,
+  "encVol1": 16, "encVol2": 17,
+  "exp1": 11, "exp2": 12
+ }
+};
+
+const EDITOR_VERZIO   = "1.35m";
+const FIRMWARE_VERZIO = "6.20";
+
+[ "byp", "mode", "amp", "amp", "dly", "dly" ].forEach((r,i)=>{ ALAP_KONFIG.combos[i].role = r; });
+
+ALAP_KONFIG.fxBlokk = { s:["DRIVE","CHORUS","DELAY"], l:["COMP","FLANGER","REVERB"] };
+
+ALAP_KONFIG.csatorna = [ { be:true, blokk:"AMP" }, { be:true, blokk:"DELAY" } ];
+
+let K = szerkezetMasolat(ALAP_KONFIG);
+const mod = "normal";
+
+let szerkAlatt = null;
+
+function szerkezetMasolat(o){ return JSON.parse(JSON.stringify(o)); }
+
+const GOMB_HELY = [
+  {x:172,y:170},{x:735,y:170},{x:1309,y:170},{x:1917,y:170},{x:2457,y:170},
+  {x:172,y:730},{x:735,y:730},{x:1309,y:730},{x:1917,y:730},{x:2457,y:730}
+];
+
+const RACS_NEV = ["top left","top centre","top right","bottom left","bottom centre","bottom right"];
+
+function rgbHex(a){ return "#"+a.map(v=>v.toString(16).padStart(2,"0")).join(""); }
+function hexRgb(h){ return [parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)]; }
+
+function elonezetSzin(a){
+  const max = Math.max(...a);
+  if(max === 0) return "#101210";
+  if(max < 60){ const f = 90/max; return rgbHex(a.map(v=>Math.min(255,Math.round(v*f)))); }
+  return rgbHex(a);
+}
+
+function gombokRajz(){
+  const g = document.getElementById("gombok");
+  const t = K[mod];
+  g.innerHTML = GOMB_HELY.map((p,i)=>{
+    const s = t[i];
+    const r = s.short, h = s.hasLong ? s.long : null;
+    const van = a => a && a.type!=="none" && a.name;
+
+    const R = 78, K = 20;
+    const iv = (szin, felfele) =>
+      `<path d="M ${p.x-R} ${p.y} A ${R} ${R} 0 0 ${felfele?1:0} ${p.x+R} ${p.y}"
+             fill="none" stroke="${szin}" stroke-width="${K}" stroke-linecap="butt"/>`;
+
+    let gyuruk;
+    if (van(r) && van(h)) {
+      gyuruk = iv(elonezetSzin(r.colorOn), true) + iv(elonezetSzin(h.colorOn), false);
+    } else if (van(r)) {
+      gyuruk = `<circle cx="${p.x}" cy="${p.y}" r="${R}" fill="none"
+                        stroke="${elonezetSzin(r.colorOn)}" stroke-width="${K}"/>`;
+    } else {
+      gyuruk = `<circle cx="${p.x}" cy="${p.y}" r="${R}" fill="none"
+                        stroke="#23261F" stroke-width="${K}"/>`;
+    }
+    return `
+      <g class="gomb" data-gomb="${i}" style="cursor:pointer">
+        ${gyuruk}
+        <circle cx="${p.x}" cy="${p.y}" r="58" fill="#B9BDB5" stroke="#7E847A" stroke-width="3"/>
+        <circle cx="${p.x}" cy="${p.y}" r="40" fill="#15171A"/>
+        <circle cx="${p.x}" cy="${p.y}" r="20" fill="#A8ADA4" stroke="#75796F"/>
+        <text x="${p.x}" y="${p.y+128}" fill="#B6BCB2" font-size="40"
+              font-family="ui-monospace,monospace" text-anchor="middle">${i+1}</text>
+        <rect class="fel" x="${p.x-58}" y="${p.y-58}" width="116" height="58" fill="transparent">
+          <title>Switch ${i+1} — short press</title></rect>
+        <rect class="le"  x="${p.x-58}" y="${p.y}"    width="116" height="58" fill="transparent">
+          <title>Switch ${i+1} — long press</title></rect>
+      </g>`;
+  }).join("");
+
+  g.querySelectorAll(".gomb").forEach(el=>{
+    const i = +el.dataset.gomb;
+    el.addEventListener("click", ()=>szerkesztoNyit(i,"short"));
+    const le = el.querySelector("rect.le");
+    if (le) le.addEventListener("click", ev=>{ ev.stopPropagation(); szerkesztoNyit(i,"long"); });
+  });
+}
+
+function kijelzoRajz(){
+  const t = K[mod];
+  const cimkek = K.kijelzo ? K.kijelzo.racsCimkek : K.grid[mod];
+
+  const GX=[0,79,158], GW=[79,79,80], GY=[5,45], GH=40;
+  const INFO_Y=K.sorok.info1, INFO2_Y=K.sorok.info2,
+        PRESET_NEV_Y=K.sorok.presetNev, SCENE_Y=K.sorok.sceneNev;
+  const EXP_Y1=199, EXP_Y2=212, VOL_Y=225;
+
+  const M  = K.kijelzo.meretek;
+  const SZ = {};
+  for(const k in K.kijelzo.szinek) SZ[k] = r565hex(K.kijelzo.szinek[k]);
+
+  let racs = "";
+  for(let i=0;i<6;i++){
+    const col=i%3, row=(i/3)|0;
+    const x=GX[col], y=GY[row], w=GW[col];
+    const cimke = cimkek[i] || "";
+
+    const aktiv = (i%2===0);
+    racs += `<rect x="${x+2}" y="${y+2}" width="${w-4}" height="${GH-4}"
+                   fill="${aktiv?SZ.racsBeHatter:SZ.racsKiHatter}" stroke="#2A2E28"/>`;
+    if(cimke) racs += `<text x="${x+w/2}" y="${y+GH/2+5}"
+                   fill="${aktiv?SZ.racsBeSzoveg:SZ.racsKiSzoveg}"
+                   font-size="${M.racs*7}" font-family="ui-monospace,monospace"
+                   text-anchor="middle">${cimke}</text>`;
+  }
+
+  document.getElementById("kijelzoTartalom").innerHTML = `
+    <rect width="240" height="240" fill="#000"/>
+    ${racs}
+
+    
+    <text x="5" y="${INFO_Y+12}" fill="${SZ.presetSzam}" font-size="${M.info*7.5}"
+          font-family="ui-monospace,monospace">393</text>
+    <text x="120" y="${INFO_Y+12}" fill="#F81F" font-size="${M.info*7.5}"
+          font-family="ui-monospace,monospace" text-anchor="middle">${K.feliratok.looperBe}</text>
+    <text x="235" y="${INFO_Y+12}" fill="${SZ.bpm}" font-size="${M.info*7.5}"
+          font-family="ui-monospace,monospace" text-anchor="end">117</text>
+
+    
+    <text x="${(240 - K.feliratok.amp[1].length*6*M.info - K.feliratok.dly[1].length*6*M.info)/4}"
+          y="${INFO2_Y+12}" fill="${SZ.info}" font-size="${M.info*7.5}"
+          font-family="ui-monospace,monospace">${K.feliratok.amp[1]}</text>
+    <text x="${240 - (240 - K.feliratok.amp[1].length*6*M.info - K.feliratok.dly[1].length*6*M.info)/4}"
+          y="${INFO2_Y+12}" fill="${SZ.info}" font-size="${M.info*7.5}"
+          font-family="ui-monospace,monospace" text-anchor="end">${K.feliratok.dly[1]}</text>
+
+    
+    <text x="120" y="${PRESET_NEV_Y+12}" fill="${SZ.presetNev}" font-size="${M.presetNev*7.5}"
+          font-family="ui-monospace,monospace" text-anchor="middle">JCM 800 Crunch</text>
+
+    
+    <text x="120" y="${SCENE_Y+18}" fill="${SZ.sceneNev}" font-size="${M.sceneNev*8.7}"
+          font-family="ui-monospace,monospace" text-anchor="middle">Clean</text>
+
+    <text x="3"   y="${EXP_Y1+6}" fill="#0F0" font-size="10" font-family="ui-monospace,monospace">EXP1</text>
+    <text x="3"   y="${EXP_Y2+6}" fill="#08F" font-size="10" font-family="ui-monospace,monospace">EXP2</text>
+    <text x="42"  y="${EXP_Y1+6}" fill="#888" font-size="10" font-family="ui-monospace,monospace">Not Connected</text>
+    <text x="42"  y="${EXP_Y2+6}" fill="#888" font-size="10" font-family="ui-monospace,monospace">Not Connected</text>
+    <text x="203" y="${EXP_Y1+6}" fill="#AAA" font-size="10" font-family="ui-monospace,monospace">BATT</text>
+    <text x="205" y="${EXP_Y2+6}" fill="#0F0" font-size="10" font-family="ui-monospace,monospace">2.84V</text>
+
+    <text x="5"   y="${VOL_Y+11}" fill="#FFF" font-size="13" font-family="ui-monospace,monospace">Vol1</text>
+    <text x="70"  y="${VOL_Y+11}" fill="#FFF" font-size="13" font-family="ui-monospace,monospace">0</text>
+    <text x="130" y="${VOL_Y+11}" fill="#FFF" font-size="13" font-family="ui-monospace,monospace">Vol2</text>
+    <text x="190" y="${VOL_Y+11}" fill="#FFF" font-size="13" font-family="ui-monospace,monospace">0</text>
+  `;
+}
+
+function akcioSor(gomb,melyik,a){
+  if(!a || a.type==="none" || !a.name){
+    return `<button class="akcio ures" data-gomb="${gomb}" data-melyik="${melyik}">
+              <span class="pont" style="background:#D5D9D3"></span>
+              <span class="nev">not set</span></button>`;
+  }
+  let cc = (a.type==="tap") ? "TAP" : (a.cc ? "CC"+a.cc : "");
+  const tobb=[a.cc2,a.cc3].filter(x=>x);
+  if(tobb.length) cc += "+"+tobb.join("+");
+  return `<button class="akcio" data-gomb="${gomb}" data-melyik="${melyik}">
+            <span class="pont" style="background:${elonezetSzin(a.colorOn)}"></span>
+            <span class="nev">${a.name}</span>
+            <span class="cc mono">${cc}</span></button>`;
+}
+
+function kartyakRajz(){
+  const t = K[mod];
+  const felso=[0,1,2,3,4], also=[5,6,7,8,9];
+  const epit = idx => idx.map(i=>{
+    const s=t[i];
+    const hosszu = s.hasLong ? akcioSor(i,"long",s.long)
+      : `<button class="akcio ures" data-gomb="${i}" data-melyik="long">
+           <span class="pont" style="background:#D5D9D3"></span>
+           <span class="nev">no long press</span></button>`;
+    return `<div class="kartya" id="kartya${i}">
+      <div class="kfej"><b>${i+1}</b><span>SWITCH</span></div>
+      <div class="cimke">short</div>
+      ${akcioSor(i,"short",s.short)}
+      <div class="cimke">long</div>
+      ${hosszu}
+    </div>`;
+  }).join("");
+  document.getElementById("sorFelso").innerHTML = epit(felso);
+  document.getElementById("sorAlso").innerHTML  = epit(also);
+
+  document.querySelectorAll(".akcio").forEach(el=>{
+    el.addEventListener("click",()=>szerkesztoNyit(+el.dataset.gomb, el.dataset.melyik));
+  });
+}
+
+function r565hex(v){
+  const r=((v>>11)&0x1F)*255/31, g=((v>>5)&0x3F)*255/63, b=(v&0x1F)*255/31;
+  return "#"+[r,g,b].map(x=>Math.round(x).toString(16).padStart(2,"0")).join("");
+}
+function hex565(h){
+  const r=parseInt(h.slice(1,3),16), g=parseInt(h.slice(3,5),16), b=parseInt(h.slice(5,7),16);
+  return ((r>>3)<<11) | ((g>>2)<<5) | (b>>3);
+}
+
+const SZIN_NEVEK = [
+  ["sceneNev",     "Scene name"],
+  ["presetNev",    "Preset name"],
+  ["presetSzam",   "Preset number"],
+  ["bpm",          "BPM"],
+  ["info",         "Info row"],
+  ["racsBeHatter", "Grid: on background"],
+  ["racsBeSzoveg", "Grid: on text"],
+  ["racsKiSzoveg", "Grid: off text"],
+  ["nincsBlokk",   "Grid: not in preset"],
+  ["athuzas",      "Grid: strike-through"],
+];
+
+const MERET_NEVEK = [
+  ["racs",      "Grid labels", 1, 3],
+  ["presetNev", "Preset name",     1, 3],
+  ["sceneNev",  "Scene name",      2, 4],
+  ["info",      "Info row",       1, 2],
+];
+
+function kijelzoSzerkRajz(){
+  const kj = K.kijelzo;
+  let h = "";
+
+  const helyek = ["top left","top centre","top right","bottom left","bottom centre","bottom right"];
+  kj.racsCimkek.forEach((c,i)=>{
+    const px = c.length*6*kj.meretek.racs;
+    const max = (i%3===2)?80:79;
+    h += `<div class="kij-tetel${px>max?" baj":""}">
+        <label>${helyek[i]}</label>
+        <div class="sor">
+          <input type="text" data-kij="cimke" data-i="${i}" value="${c}" maxlength="8">
+          <span class="px">${px}/${max}px</span>
+        </div>
+      </div>`;
+  });
+
+  MERET_NEVEK.forEach(([kulcs,nev,min,max])=>{
+    let opt = "";
+    for(let v=min; v<=max; v++)
+      opt += `<option value="${v}"${kj.meretek[kulcs]===v?" selected":""}>${v}× (${v*6}px/char)</option>`;
+    h += `<div class="kij-tetel">
+        <label>${nev} — size</label>
+        <div class="sor"><select data-kij="meret" data-k="${kulcs}">${opt}</select></div>
+      </div>`;
+  });
+
+  SZIN_NEVEK.forEach(([kulcs,nev])=>{
+    h += `<div class="kij-tetel">
+        <label>${nev}</label>
+        <div class="sor">
+          <input type="color" data-kij="szin" data-k="${kulcs}" value="${r565hex(kj.szinek[kulcs])}">
+          <span class="px">0x${kj.szinek[kulcs].toString(16).toUpperCase().padStart(4,"0")}</span>
+        </div>
+      </div>`;
+  });
+
+  const cel = document.getElementById("kijLista");
+  cel.innerHTML = h;
+
+  cel.querySelectorAll("[data-kij]").forEach(el=>{
+    el.addEventListener("change",()=>{
+      const mi = el.dataset.kij;
+      if(mi==="cimke")      K.kijelzo.racsCimkek[+el.dataset.i] = el.value;
+      else if(mi==="meret") K.kijelzo.meretek[el.dataset.k] = +el.value;
+      else if(mi==="szin")  K.kijelzo.szinek[el.dataset.k] = hex565(el.value);
+
+      K.grid.normal = K.kijelzo.racsCimkek.slice();
+      mindenRajz();
+    });
+  });
+}
+
+function indulasRajz(){
+  const cel = document.getElementById("indulasLista");
+  cel.innerHTML = `
+    <div class="kij-tetel">
+      <label>Not in preset — colour</label>
+      <div class="sor">
+        <input type="color" id="nincsSzin" value="${K.indulas.nincsSzin}">
+        <span class="px">default</span>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Not in preset — signal</label>
+      <div class="sor">
+        <input type="color" id="nincsJelzes" value="${K.indulas.nincsJelzes}">
+        <span class="px">when pressed</span>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Number of flashes</label>
+      <div class="sor">
+        <input type="text" id="nincsVillanas" value="${K.indulas.nincsVillanas}">
+        <span class="px">times</span>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Flash length</label>
+      <div class="sor">
+        <input type="text" id="nincsIdo" value="${K.indulas.nincsIdo}">
+        <span class="px">ms</span>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>NOT SYNC while running</label>
+      <div class="sor">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" id="indNotsync" ${K.indulas.notsync ? "checked" : ""}>
+          <span class="px" style="white-space:normal">off = no indication</span>
+        </label>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Jump at start-up</label>
+      <div class="sor">
+        <label style="display:flex;align-items:center;gap:6px;cursor:pointer">
+          <input type="checkbox" id="indUgras" ${K.indulas.ugras ? "checked" : ""}>
+          <span class="px" style="white-space:normal">
+            off = stays on whatever the FM3 is on
+          </span>
+        </label>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Start preset</label>
+      <div class="sor">
+        <input type="text" id="indPreset" value="${K.indulas.preset}">
+        <span class="px">0-based</span>
+      </div>
+    </div>
+    <div class="kij-tetel" style="grid-column:1/-1">
+      <label>Note</label>
+      <div class="sor"><span class="px" style="white-space:normal">
+        The firmware sends the RAW MIDI number (0-based). If you number the presets from 001 on the FM3, enter ONE LESS here: 392 for 393.
+        <br><br>
+        Turning <b>NOT SYNC while running</b> off is useful when you work with FM3-Edit: while saving and editing, the unit is busy for a while and does not answer. The boot check is not affected.
+        <br><br>
+        <b>IMPORTANT:</b> the jump only works if <i>Setup → MIDI/Remote → Program Change</i> is switched on on the FM3. If it is off there, the unit ignores the command.
+      </span></div>
+    </div>
+    <div class="kij-tetel">
+      <label>Start BPM</label>
+      <div class="sor">
+        <input type="text" id="indBpm" value="${K.indulas.bpm}">
+        <span class="px">until the FM3 answers</span>
+      </div>
+    </div>`;
+  document.getElementById("nincsSzin").addEventListener("change",e=>{
+    K.indulas.nincsSzin = e.target.value; ellenoriz(); });
+  document.getElementById("nincsJelzes").addEventListener("change",e=>{
+    K.indulas.nincsJelzes = e.target.value; ellenoriz(); });
+  document.getElementById("nincsVillanas").addEventListener("change",e=>{
+    K.indulas.nincsVillanas = Math.max(1, Math.min(10, parseInt(e.target.value)||3)); indulasRajz(); ellenoriz(); });
+  document.getElementById("nincsIdo").addEventListener("change",e=>{
+    K.indulas.nincsIdo = Math.max(20, Math.min(500, parseInt(e.target.value)||80)); indulasRajz(); ellenoriz(); });
+  document.getElementById("indNotsync").addEventListener("change",e=>{
+    K.indulas.notsync = e.target.checked;
+    ellenoriz();
+  });
+  document.getElementById("indUgras").addEventListener("change",e=>{
+    K.indulas.ugras = e.target.checked;
+    ellenoriz();
+  });
+  document.getElementById("indPreset").addEventListener("change",e=>{
+    K.indulas.preset = parseInt(e.target.value);
+    if(isNaN(K.indulas.preset)) K.indulas.preset = -1;
+    mindenRajz();
+  });
+  document.getElementById("indBpm").addEventListener("change",e=>{
+    K.indulas.bpm = parseInt(e.target.value)||120; mindenRajz();
+  });
+}
+
+function figyeloRajz(){
+  const f = K.figyelo;
+  document.getElementById("figyeloLista").innerHTML = `
+    <div class="kij-tetel">
+      <label>Watching</label>
+      <div class="sor">
+        <select id="figyBe">
+          <option value="1"${f.be?" selected":""}>on</option>
+          <option value="0"${!f.be?" selected":""}>off</option>
+        </select>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Interval</label>
+      <div class="sor">
+        <input type="text" id="figyUtem" value="${f.utem}">
+        <span class="px">ms — one full cycle ${(f.utem*4/1000).toFixed(1)} s</span>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Log</label>
+      <div class="sor">
+        <select id="figyCsend">
+          <option value="1"${f.csendes?" selected":""}>changes only</option>
+          <option value="0"${!f.csendes?" selected":""}>everything (for debugging)</option>
+        </select>
+      </div>
+    </div>
+    <div class="kij-tetel" style="grid-column:1/-1">
+      <label>Note</label>
+      <div class="sor"><span class="px" style="white-space:normal">
+        It queries four things in turn — preset, scene, effect, tempo — and only updates when something has really changed. A query blocks for 17 ms, so only one goes per round: the switch debounce is 20 ms, so no single press is ever lost.
+      </span></div>
+    </div>`;
+  document.getElementById("figyBe").addEventListener("change",e=>{
+    K.figyelo.be = e.target.value==="1"; mindenRajz(); });
+  document.getElementById("figyUtem").addEventListener("change",e=>{
+    K.figyelo.utem = parseInt(e.target.value)||300; mindenRajz(); });
+  document.getElementById("figyCsend").addEventListener("change",e=>{
+    K.figyelo.csendes = e.target.value==="1"; mindenRajz(); });
+}
+
+const MIDI_KULCSOK = ["ampCh","dlyCh","loopBypass",
+  "loopRec","loopPlay","loopStop","loopUndo","loopReverse","loopHalf","loopOnce",
+  "encVol1","encVol2","exp1","exp2"];
+
+const MIDI_FW_NEV = {
+  ampCh:"CC_AMP_CHANNEL", dlyCh:"CC_DELAY_CHANNEL", loopBypass:"CC_LOOPER_BYPASS",
+  loopRec:"LOOPER_CC_REC", loopPlay:"LOOPER_CC_PLAY", loopStop:"LOOPER_CC_STOP",
+  loopUndo:"LOOPER_CC_UNDO", loopReverse:"LOOPER_CC_REVERSE",
+  loopHalf:"LOOPER_CC_HALF", loopOnce:"LOOPER_CC_ONCE",
+  encVol1:"ENCODER_CC_VOL1", encVol2:"ENCODER_CC_VOL2",
+  exp1:"EXP1_CC", exp2:"EXP2_CC",
+};
+
+const MIDI_SZEREP = {
+  ampCh:"Channel 1", dlyCh:"Channel 2", loopBypass:"Looper bypass",
+  loopRec:"Looper REC", loopPlay:"Looper PLAY", loopStop:"Looper STOP",
+  loopUndo:"Looper ERASE", loopReverse:"Looper REVERSE",
+  loopHalf:"Looper HALF", loopOnce:"Looper ONCE",
+  encVol1:"Encoder Vol1", encVol2:"Encoder Vol2", exp1:"EXP1 pedal", exp2:"EXP2 pedal",
+};
+
+const LOOPER_GOMB_SZEREP = { 1:"loopReverse", 2:"loopHalf", 3:"loopUndo",
+                             6:"loopRec", 7:"loopPlay", 8:"loopStop", 9:"loopOnce" };
+
+function looperSzinkron(kk){
+  kk = kk || K;
+  Object.entries(LOOPER_GOMB_SZEREP).forEach(([i,kulcs])=>{
+    const g = kk.looper && kk.looper[+i];
+    if (g && g.short) g.short.cc = kk.midi[kulcs];
+  });
+}
+
+const KOMBO_SZEREP_MIDI = { amp:"ampCh", dly:"dlyCh", byp:"loopBypass" };
+const KOMBO_SZEREP_NEV  = { amp:"Channel 1", dly:"Channel 2", byp:"Looper bypass", mode:"Looper mode" };
+
+function komboAktiv(c){
+  if (c.role === "amp") return !!K.csatorna[0].be;
+  if (c.role === "dly") return !!K.csatorna[1].be;
+  return true;
+}
+
+function komboSzerepCcSzinkron(kk){
+  kk = kk || K;
+  kk.combos.forEach(c=>{
+    const k = KOMBO_SZEREP_MIDI[c.role];
+    if (k) c.act.cc = kk.midi[k];
+    if (c.role === "amp") c.slot = 0;
+    if (c.role === "dly") c.slot = 1;
+  });
+}
+
+function szerepBecsles(kk){
+  kk.combos.forEach(c=>{
+    if (c.role) return;
+    if (c.act.type === "modeToggle")        c.role = "mode";
+    else if (c.act.cc === kk.midi.loopBypass) c.role = "byp";
+    else if (c.act.cc === kk.midi.ampCh)      c.role = "amp";
+    else if (c.act.cc === kk.midi.dlyCh)      c.role = "dly";
+  });
+}
+
+function kNormalizal(kk){
+  kk = kk || K;
+  if (!kk.midi) kk.midi = szerkezetMasolat(ALAP_KONFIG.midi);
+  fxBlokkPotlas(kk);
+  if (!Array.isArray(kk.csatorna) || kk.csatorna.length !== 2) kk.csatorna = szerkezetMasolat(ALAP_KONFIG.csatorna);
+  kk.csatorna.forEach((cs_,n)=>{
+    if (BLOKK_KULCSOK.indexOf(cs_.blokk) < 0) cs_.blokk = ALAP_KONFIG.csatorna[n].blokk;
+    cs_.be = cs_.be !== false;
+  });
+  szerepBecsles(kk);
+  komboSzerepCcSzinkron(kk);
+  looperSzinkron(kk);
+  return kk;
+}
+
+function midiBeallit(kulcs, nyers){
+  let ertek = parseInt(nyers,10);
+  if (isNaN(ertek)) ertek = K.midi[kulcs];
+  ertek = Math.max(0, Math.min(127, ertek));
+  K.midi[kulcs] = ertek;
+  mindenRajz();
+}
+
+function midiRajz(){
+  const m = K.midi;
+  const cc = (kulcs, felirat, seg) => `
+    <div class="kij-tetel">
+      <label>${felirat}</label>
+      <div class="sor">
+        <input type="text" inputmode="numeric" id="midi_${kulcs}" value="${m[kulcs]}" style="width:4.5em">
+        <span class="px">${seg}</span>
+      </div>
+    </div>`;
+  const csat = [...Array(16)].map((_,i)=>
+    `<option value="${i+1}"${m.channel===i+1?" selected":""}>${i+1}</option>`).join("");
+
+  document.getElementById("midiLista").innerHTML = `
+    <div class="kij-tetel">
+      <label>MIDI channel</label>
+      <div class="sor">
+        <select id="midi_channel">${csat}</select>
+        <span class="px">must match the FM3's MIDI channel</span>
+      </div>
+    </div>` +
+    cc("ampCh",      "Channel 1",    "A / B / C / D switching") +
+    cc("dlyCh",      "Channel 2",    "A / B / C / D switching") +
+    cc("loopBypass", "Looper bypass", "looper block on/off") +
+    cc("loopRec",    "Looper REC",    "record") +
+    cc("loopPlay",   "Looper PLAY",   "play") +
+    cc("loopStop",   "Looper STOP",   "stop") +
+    cc("loopUndo",   "Looper ERASE",  "shown as ERASE on the switch, actually clears") +
+    cc("loopReverse","Looper REVERSE","reverse") +
+    cc("loopHalf",   "Looper HALF",   "half speed") +
+    cc("loopOnce",   "Looper ONCE",   "play once") +
+    cc("encVol1",    "Encoder Vol1",  "Output 1 volume") +
+    cc("encVol2",    "Encoder Vol2",  "Output 2 volume") +
+    cc("exp1",       "EXP1 pedal",    "expression pedal 1") +
+    cc("exp2",       "EXP2 pedal",    "expression pedal 2") + `
+    <div class="kij-tetel" style="grid-column:1/-1">
+      <label>Note</label>
+      <div class="sor"><span class="px" style="white-space:normal">
+        Assign the same CCs on the FM3 (Setup → MIDI/Remote). The combos follow the Channel 1, Channel 2 and bypass CCs: if you change one here, the combo automatically sends the new one. One CC number is one function on the FM3 — two roles cannot share it (see Checks).
+      </span></div>
+    </div>`;
+
+  document.getElementById("midi_channel").addEventListener("change",e=>{
+    K.midi.channel = parseInt(e.target.value,10); mindenRajz(); });
+  MIDI_KULCSOK.forEach(k=>{
+    document.getElementById("midi_"+k).addEventListener("change",e=>midiBeallit(k,e.target.value));
+  });
+}
+
+const BLOKK_LISTA = [
+
+  ["NONE",    "none (the LED does not follow the FM3)", 0x00],
+  ["AMP",     "Amp",           0x3A],
+  ["DRIVE",   "Drive",         0x76],
+  ["COMP",    "Compressor 1",  0x2E],
+  ["COMP2",   "Compressor 2",  0x2F],
+  ["CHORUS",  "Chorus",        0x4E],
+  ["FLANGER", "Flanger",       0x52],
+  ["PHASER",  "Phaser 1",      0x5A],
+  ["PHASER2", "Phaser 2",      0x5B],
+  ["PITCH",   "Pitch",         0x6E],
+  ["ROTARY",  "Rotary 1",      0x56],
+  ["ROTARY2", "Rotary 2",      0x57],
+  ["SYNTH",   "Synth",         0x82],
+  ["TREMOLO", "Tremolo",       0x6A],
+  ["DELAY",   "Delay",         0x46],
+  ["REVERB",  "Reverb",        0x42],
+];
+const BLOKK_ID = Object.fromEntries(BLOKK_LISTA.map(b => [b[0], b[2]]));
+const BLOKK_KULCSOK = BLOKK_LISTA.map(b=>b[0]);
+
+function effektHely(gomb){ return mod === "normal" && gomb >= 0 && gomb < 3; }
+
+function fxBlokkPotlas(kk){
+  if (!kk.fxBlokk) kk.fxBlokk = szerkezetMasolat(ALAP_KONFIG.fxBlokk);
+  ["s","l"].forEach(o=>{
+    for (let i=0;i<3;i++){
+      if (BLOKK_KULCSOK.indexOf(kk.fxBlokk[o][i]) < 0) kk.fxBlokk[o][i] = "NONE";
+    }
+  });
+}
+
+function csatRajz(){
+  const cel = document.getElementById("csatLista");
+  let h = "";
+  [0,1].forEach(n=>{
+    const cs_ = K.csatorna[n], szerep = n===0 ? "amp" : "dly";
+    const parok = K.combos.filter(c=>c.role===szerep).map(c=>`${c.a+1}+${c.b+1}`).join(" and ") || "—";
+    const cc = n===0 ? K.midi.ampCh : K.midi.dlyCh;
+    h += `
+    <div class="kij-tetel">
+      <label>Channel ${n+1} — footswitch pairs</label>
+      <div class="sor">
+        <select id="csat_be_${n}">
+          <option value="1"${cs_.be?" selected":""}>on</option>
+          <option value="0"${cs_.be?"":" selected"}>off</option>
+        </select>
+        <span class="px">${cs_.be
+          ? `stepping on ${parok} switches the channel (CC ${cc})`
+          : `stepping on ${parok} does nothing`}</span>
+      </div>
+    </div>
+    <div class="kij-tetel">
+      <label>Channel ${n+1} — follows FM3 block</label>
+      <div class="sor">
+        <select id="csat_blokk_${n}">${BLOKK_LISTA.map(([k,nv])=>
+          `<option value="${k}"${cs_.blokk===k?" selected":""}>${k==="NONE"?"none (not shown)":nv}</option>`).join("")}</select>
+        <span class="px">the display shows this block's channel</span>
+      </div>
+    </div>`;
+  });
+  h += `
+    <div class="kij-tetel" style="grid-column:1/-1">
+      <label>Note</label>
+      <div class="sor"><span class="px" style="white-space:normal">
+        <b>Footswitch pairs on:</b> stepping on the switch pair switches the channel (A–D).
+        <b>Off:</b> stepping on both switches together does nothing — no channel change and no scene change.
+        Use it if you tend to step on two switches by accident. Each switch still works on its own.
+        <b>Follows FM3 block</b> is separate: the display shows that block's channel either way.
+        The CC is set in the MIDI panel, the labels in Display rows.
+      </span></div>
+    </div>`;
+  cel.innerHTML = h;
+  [0,1].forEach(n=>{
+    document.getElementById("csat_be_"+n).addEventListener("change",e=>{
+      K.csatorna[n].be = e.target.value === "1"; mindenRajz(); });
+    document.getElementById("csat_blokk_"+n).addEventListener("change",e=>{
+      K.csatorna[n].blokk = e.target.value; mindenRajz(); });
+  });
+}
+
+const SOR_HATAR_FENT = 85;
+const SOR_HATAR_LENT = 199;
+
+function sorokRajz(){
+  const s = K.sorok, f = K.feliratok;
+  const m = K.kijelzo.meretek;
+
+  const mag = sz => sz * 8 + 4;
+
+  let h = "";
+  const mezo = (cim, kulcs, ertek, jegyzet) => `
+    <div class="kij-tetel">
+      <label>${cim}</label>
+      <div class="sor">
+        <input type="text" data-sor="${kulcs}" value="${ertek}">
+        <span class="px">${jegyzet}</span>
+      </div>
+    </div>`;
+
+  h += mezo("Info row 1",  "info1",     s.info1,     `${s.info1}..${s.info1+mag(m.info)} px`);
+  h += mezo("Info row 2",  "info2",     s.info2,     `${s.info2}..${s.info2+mag(m.info)} px`);
+  h += mezo("Preset name",   "presetNev", s.presetNev, `${s.presetNev}..${s.presetNev+mag(m.presetNev)} px`);
+  h += mezo("Scene name",    "sceneNev",  s.sceneNev,  `${s.sceneNev}..${s.sceneNev+mag(m.sceneNev)} px`);
+
+  const felirat = (cim, ertek, kulcs, idx) => {
+    const px = ertek.length * 6 * m.info;
+    return `
+    <div class="kij-tetel">
+      <label>${cim}</label>
+      <div class="sor">
+        <input type="text" data-felirat="${kulcs}" data-i="${idx}" value="${ertek}" maxlength="12">
+        <span class="px">${px} px</span>
+      </div>
+    </div>`;
+  };
+  h += felirat("Channel 1 label (B)", f.amp[1], "amp", 1);
+  h += felirat("Channel 2 label (B)", f.dly[1], "dly", 1);
+  h += `
+    <div class="kij-tetel" style="grid-column:1/-1">
+      <label>Channel labels</label>
+      <div class="sor"><span class="px" style="white-space:normal">
+        The letter at the end is the channel. Type the label for channel B — for example
+        <b>1CH B</b> — and the other three follow automatically: 1CH A, 1CH C, 1CH D.
+      </span></div>
+    </div>`;
+  h += felirat("Looper on", f.looperBe, "looperBe", -1);
+  h += felirat("Looper bypass",      f.looperKi, "looperKi", -1);
+
+  const v = K.vol;
+  h += `<div class="kij-tetel">
+      <label>Volume 1 label</label>
+      <div class="sor"><input type="text" data-vol="felirat1" value="${v.felirat1}" maxlength="8"></div>
+    </div>`;
+  h += `<div class="kij-tetel">
+      <label>Volume 2 label</label>
+      <div class="sor"><input type="text" data-vol="felirat2" value="${v.felirat2}" maxlength="8"></div>
+    </div>`;
+  h += `<div class="kij-tetel">
+      <label>Label colour</label>
+      <div class="sor">
+        <input type="color" data-vol="szinFelirat" value="${r565hex(v.szinFelirat)}">
+        <span class="px">a "${v.felirat1}" / "${v.felirat2}" text</span>
+      </div>
+    </div>`;
+  h += `<div class="kij-tetel">
+      <label>Value — active</label>
+      <div class="sor">
+        <input type="color" data-vol="szinAktiv" value="${r565hex(v.szinAktiv)}">
+        <span class="px">when the encoder is adjusting this one</span>
+      </div>
+    </div>`;
+  h += `<div class="kij-tetel">
+      <label>Value — idle</label>
+      <div class="sor">
+        <input type="color" data-vol="szinTetlen" value="${r565hex(v.szinTetlen)}">
+        <span class="px">the other volume</span>
+      </div>
+    </div>`;
+
+  const cel = document.getElementById("sorokLista");
+  cel.innerHTML = h;
+
+  cel.querySelectorAll("[data-sor]").forEach(el=>{
+    el.addEventListener("change",()=>{
+      K.sorok[el.dataset.sor] = parseInt(el.value) || 0;
+      mindenRajz();
+    });
+  });
+  cel.querySelectorAll("[data-vol]").forEach(el=>{
+    el.addEventListener("change",()=>{
+      const k = el.dataset.vol;
+      K.vol[k] = k.startsWith("szin") ? hex565(el.value) : el.value;
+      mindenRajz();
+    });
+  });
+  cel.querySelectorAll("[data-felirat]").forEach(el=>{
+    el.addEventListener("change",()=>{
+      const k = el.dataset.felirat;
+      if (k === "amp" || k === "dly") {
+
+        const uj = el.value;
+        const elotag = uj.replace(/[ABCD]\s*$/, "");
+        K.feliratok[k] = ["A","B","C","D"].map(c => elotag + c);
+      } else {
+        K.feliratok[k] = el.value;
+      }
+      mindenRajz();
+    });
+  });
+}
+
+const KOMBO_PAROK = [
+  [0,1],[1,2],
+  [5,6],[6,7],[7,8],[8,9],
+  [0,5],[1,6],[4,9],
+];
+
+function komboFix(c){
+
+  return c.act.type === "modeToggle" || c.role === "mode" || c.role === "byp";
+}
+
+function komboLeirasKod(c){
+  if (c.act.type === "modeToggle") return "Looper mód be/ki";
+  if (c.role === "byp") return "Looper bypass";
+  return c.act.name || "(none)";
+}
+
+function komboLeiras(c){
+  if (c.act.type === "modeToggle") return "Looper mode on/off";
+  if (c.role === "byp")                           return "Looper bypass";
+  return c.act.name || "(none)";
+}
+
+function kombokRajz(){
+  const cel = document.getElementById("komboLista");
+  cel.innerHTML = K.combos.map((c,i)=>{
+    const fix = komboFix(c), ki = !komboAktiv(c);
+    const cc  = c.act.cc ? "CC"+c.act.cc : "—";
+    return `<button class="kombo${fix||ki?" zart":""}" data-kombo="${i}"${fix||ki?" disabled":""}>
+      <span class="par">${c.a+1}+${c.b+1}${fix?'<span class="lakat">fixed</span>':''}${ki?'<span class="lakat">off</span>':''}</span>
+      <span class="mit">${ki ? komboLeiras(c)+" — off, does nothing (Channel switching)" : komboLeiras(c)}</span>
+      <span class="cc">${cc}</span>
+    </button>`;
+  }).join("");
+  cel.querySelectorAll(".kombo:not(.zart)").forEach(el=>{
+    el.addEventListener("click",()=>komboNyit(+el.dataset.kombo));
+  });
+}
+
+let komboAlatt = null;
+const kdlg = document.getElementById("komboSzerk");
+
+function komboNyit(i){
+  const c = K.combos[i];
+  komboAlatt = i;
+  document.getElementById("komboCim").textContent = `Combo ${i+1}`;
+
+  const foglalt = new Set(K.combos.filter((_,j)=>j!==i).map(x=>`${x.a},${x.b}`));
+  kPar.innerHTML = KOMBO_PAROK
+    .filter(([a,b]) => !foglalt.has(`${a},${b}`) || (a===c.a && b===c.b))
+    .map(([a,b]) => `<option value="${a},${b}"${(a===c.a&&b===c.b)?" selected":""}>${a+1} + ${b+1}</option>`)
+    .join("");
+
+  kNev.value=c.act.name||""; kTipus.value=c.act.type==="momentary"?"momentary":"toggle";
+  kCC.value=c.act.cc; kOn.value=c.act.on; kOff.value=c.act.off;
+
+  const szerep = KOMBO_SZEREP_MIDI[c.role];
+  kCC.disabled = !!szerep;
+  kCC.title = szerep ? "Set in the MIDI panel" : "";
+  document.getElementById("kSugoCC").textContent = szerep
+    ? `The CC number comes from the MIDI panel (${KOMBO_SZEREP_NEV[c.role]}) and cannot be changed here. The two values are the FM3's channel numbers: 0 = A, 1 = B, 2 = C, 3 = D.`
+    : "CC number, then the two values it alternates. For the amp channel for example 0 and 1 (channel A and B).";
+  kNevKi.value=c.nameOff||"";
+  kSlot.value=String(c.slot); kStat.value=c.statusOn||""; kStatKi.value=c.statusOff||"";
+
+  const csatKombo = !!KOMBO_SZEREP_MIDI[c.role];
+  document.getElementById("kSlotBlokk").style.display = csatKombo ? "none" : "";
+  document.getElementById("kSlotHelyett").textContent = csatKombo
+    ? `The bottom info row shows this channel automatically (slot ${c.role==="amp"?1:2}), with the text set in Display rows (Channel ${c.role==="amp"?1:2} label).`
+    : "";
+  komboSugo();
+  kdlg.showModal();
+}
+
+function komboSugo(){
+  const [a,b] = kPar.value.split(",").map(Number);
+  const sor = i => i<5 ? "top" : "bottom";
+  document.getElementById("kSugoPar").textContent =
+    (sor(a)===sor(b))
+      ? `Neighbouring switches in the same row.`
+      : `Vertical pair: switch ${a+1} (top) and switch ${b+1} (bottom) together.`;
+}
+kPar.addEventListener("change",komboSugo);
+
+kdlg.addEventListener("close",()=>{
+  if(kdlg.returnValue!=="ok" || komboAlatt===null) return;
+  const c = K.combos[komboAlatt];
+  const [a,b] = kPar.value.split(",").map(Number);
+  c.a=a; c.b=b;
+  c.act.name=kNev.value; c.act.type=kTipus.value;
+  if (!KOMBO_SZEREP_MIDI[c.role]) c.act.cc=+kCC.value||0;
+  c.act.on=+kOn.value||0; c.act.off=+kOff.value||0;
+  c.nameOff=kNevKi.value.trim();
+  if (!KOMBO_SZEREP_MIDI[c.role]) {
+    c.slot=+kSlot.value; c.statusOn=kStat.value.trim(); c.statusOff=kStatKi.value.trim();
+  }
+  mindenRajz();
+});
+
+function ellenorzes(){
+  const bajok=[];
+  const figyelmek=[];
+  const t=K[mod];
+
+  const dobozok={};
+  t.forEach((s,i)=>{
+    [["short",s.short],["long",s.hasLong?s.long:null]].forEach(([mi,a])=>{
+      if(!a || a.grid<0) return;
+      (dobozok[a.grid] = dobozok[a.grid]||[]).push(`Switch ${i+1} ${mi} (${a.name})`);
+    });
+  });
+  Object.entries(dobozok).forEach(([g,lista])=>{
+    if(lista.length>1) bajok.push(`The "${RACS_NEV[g]}" box belongs to ${lista.length} actions: ${lista.join(", ")}`);
+  });
+
+  K.grid[mod].forEach((c,i)=>{
+    const px=c.length*12, max=(i%3===2)?80:79;
+    if(px>max) bajok.push(`The label "${c}" is ${px} px, the box is ${max} px — it would be cut off`);
+  });
+
+  const sceneAkciok=[];
+  t.forEach((s,i)=>{
+    [["short",s.short],["long",s.hasLong?s.long:null]].forEach(([mi,a])=>{
+      if(a && a.type==="scene") sceneAkciok.push({i,mi,a});
+    });
+  });
+  if(sceneAkciok.length){
+    const cck=new Set(sceneAkciok.map(x=>x.a.cc));
+    if(cck.size>1){
+      bajok.push(`The scene switches use several CC numbers (${[...cck].join(", ")}) —  `+
+                 `one group must use the same CC, otherwise they do not replace each other`);
+    }
+    const ertekek={};
+    sceneAkciok.forEach(x=>{ (ertekek[x.a.on]=ertekek[x.a.on]||[]).push(`Switch ${x.i+1} ${x.mi} (${x.a.name})`); });
+    Object.entries(ertekek).forEach(([e,lista])=>{
+      if(lista.length>1) figyelmek.push(`Two scene switches jump to the same value (${e}): ${lista.join(", ")}`);
+    });
+  }
+
+  const looperKombok=K.combos.filter(c=>
+    c.act.type==="modeToggle" || c.role==="mode" || c.role==="byp");
+  looperKombok.forEach(c=>{
+    [c.a,c.b].forEach(i=>{
+      const nev = c.act.type==="modeToggle" ? "mode switch" : "looper bypass";
+      if(t[i].short.press && t[i].short.type!=="none")
+        bajok.push(`Switch ${i+1} belongs to the ${nev} combo but fires on press — the combo would not work`);
+    });
+  });
+
+  t.forEach((sw,i)=>{
+    [["short",sw.short],["long",sw.hasLong?sw.long:null]].forEach(([mi,a])=>{
+      if(!a || a.type==="none") return;
+      [["CC",a.cc],["2. CC",a.cc2],["3. CC",a.cc3]].forEach(([nev,ertek])=>{
+        if(ertek>127) bajok.push(`Switch ${i+1} ${mi} (${a.name}): ${nev} is ${ertek} —  `+
+                                 `only 0–127 is allowed in MIDI`);
+      });
+      [["on",a.on],["off",a.off]].forEach(([nev,ertek])=>{
+        if(ertek>127) bajok.push(`Switch ${i+1} ${mi} (${a.name}): ${nev} value ${ertek} —  `+
+                                 `only 0–127 is allowed in MIDI`);
+      });
+    });
+  });
+  K.combos.filter(komboAktiv).forEach(c=>{
+    if(c.act.cc>127||c.act.on>127||c.act.off>127)
+      bajok.push(`Combo ${c.a+1}+${c.b+1} has a value above 127 — only 0–127 is allowed in MIDI`);
+  });
+
+  {
+    const m = K.kijelzo.meretek, s2 = K.sorok;
+    const mag = sz => sz * 8 + 4;
+    const elemek = [
+      ["effect grid",  0,            SOR_HATAR_FENT],
+      ["Info row 1",  s2.info1,     s2.info1 + mag(m.info)],
+      ["Info row 2",  s2.info2,     s2.info2 + mag(m.info)],
+      ["preset name",   s2.presetNev, s2.presetNev + mag(m.presetNev)],
+      ["scene name",    s2.sceneNev,  s2.sceneNev + mag(m.sceneNev)],
+      ["EXP bars",    SOR_HATAR_LENT, 240],
+    ];
+    for (let i = 0; i < elemek.length - 1; i++) {
+      const [n1, , v1] = elemek[i];
+      const [n2, e2]   = elemek[i+1];
+      if (v1 > e2) {
+        bajok.push(`Row "${n1}" (ends at ${v1} px) overlaps row "${n2}"  ` +
+                   `(starts at ${e2} px) — by ${v1 - e2} px`);
+      }
+    }
+  }
+
+  {
+    const m = K.kijelzo.meretek;
+    const wA = K.feliratok.amp[1].length * 6 * m.info;
+    const wD = K.feliratok.dly[1].length * 6 * m.info;
+    if (wA + wD > 240) {
+      figyelmek.push(`The channel labels do not fit: "${K.feliratok.amp[1]}" +  ` +
+                 `"${K.feliratok.dly[1]}" = ${wA+wD} px, the display is 240 px`);
+    } else if (240 - wA - wD < 24) {
+      figyelmek.push(`The channel labels only just fit (${240-wA-wD} px left  ` +
+                     `between the two labels)`);
+    }
+    const wL = Math.max(K.feliratok.looperBe.length, K.feliratok.looperKi.length) * 6 * m.info;
+    if (wL > 157) {
+      figyelmek.push(`The looper label does not fit: ${wL} px, the centre band has 157 px`);
+    }
+  }
+
+  K.normal.forEach((sw,i) => {
+    if (sw.hasLong && sw.short.press)
+      bajok.push(`Switch ${i+1} short fires on press, but the switch also has a long press. `+
+                 `Both would run: the short one at once, the long one after the hold time. `+
+                 `With a long press the short one must fire on release.`);
+  });
+
+  [0,1,2].forEach(i => {
+    const sw = K.normal[i];
+    [["short", sw.short], ["long", sw.hasLong ? sw.long : null]].forEach(([mi,a]) => {
+      if (a && a.type !== "toggle")
+        bajok.push(`Switch ${i+1} ${mi} is set to “${a.type}”. Switches 1–3 are the effect switches: `+
+                   `only an on/off toggle belongs there, so the LED can follow the FM3 block.`);
+    });
+  });
+
+  {
+    const mm = K.midi;
+    if (mm.channel < 1 || mm.channel > 16)
+      bajok.push(`The MIDI channel is ${mm.channel} — it must be between 1 and 16`);
+    MIDI_KULCSOK.forEach(k=>{
+      if (mm[k] < 0 || mm[k] > 127)
+        bajok.push(`${MIDI_SZEREP[k]}: the CC is ${mm[k]} — only 0–127 is allowed in MIDI`);
+    });
+
+    const BANK = "is Bank Select — the pedal itself sends it when it jumps to a preset, so it would change the bank on the FM3";
+    const funkcio = new Map();
+    const add = (cc, kulcs, nev) => {
+      if (!funkcio.has(cc)) funkcio.set(cc, new Map());
+      if (!funkcio.get(cc).has(kulcs)) funkcio.get(cc).set(kulcs, nev);
+    };
+    const kuld = t => t && t !== "none" && t !== "modeToggle";
+
+    MIDI_KULCSOK.forEach(k=>{
+      if (mm[k] === 0) bajok.push(`${MIDI_SZEREP[k]}: CC 0 ${BANK}`);
+      else add(mm[k], "panel:"+k, MIDI_SZEREP[k]);
+    });
+
+    K.normal.forEach((sw,i)=>{
+      [["short",sw.short],["long",sw.hasLong?sw.long:null]].forEach(([mi,a])=>{
+        if (!a || !kuld(a.type)) return;
+        const nev = `Switch ${i+1} ${mi} (${a.name})`;
+        let kulcs;
+        if (a.type === "scene")                    kulcs = "scene";
+        else if (i < 3 && a.type === "toggle")     kulcs = "racs";
+        else                                       kulcs = "gomb:"+i+":"+mi;
+        const cimke = kulcs==="scene" ? "the scene switches" : kulcs==="racs" ? "the effect slots (switches 1–3)" : nev;
+        if (a.cc === 0) bajok.push(`${nev}: CC 0 ${BANK}`);
+        else add(a.cc, kulcs, cimke);
+        if (a.cc2) add(a.cc2, kulcs, cimke);
+        if (a.cc3) add(a.cc3, kulcs, cimke);
+      });
+    });
+
+    K.combos.filter(komboAktiv).forEach(c=>{
+      if (!kuld(c.act.type)) return;
+      if (KOMBO_SZEREP_MIDI[c.role]) return;
+      if (c.role === "byp") return;
+      const nev = `combo ${c.a+1}+${c.b+1} (${c.act.name})`;
+      if (c.act.cc === 0) bajok.push(`${nev}: CC 0 ${BANK}`);
+      else add(c.act.cc, "kombo:"+c.a+"+"+c.b, nev);
+    });
+
+    funkcio.forEach((f, cc)=>{
+      if (f.size > 1)
+        bajok.push(`CC ${cc} is used by more than one function: ${[...f.values()].join(", ")} — `+
+                   `on the FM3 one CC is one function, so one of them will not work. `+
+                   `Only the six effect slots (switches 1–3) may share a CC.`);
+    });
+  }
+
+  const parok = new Map();
+  const aktivKombok = K.combos.filter(komboAktiv);
+  aktivKombok.forEach((c,i)=>{
+    const kulcs = `${c.a},${c.b}`;
+    if(parok.has(kulcs))
+      bajok.push(`Two combos on the same switch pair: ${c.a+1}+${c.b+1}`);
+    parok.set(kulcs,i);
+
+    if (c.role==="amp" || c.role==="dly") {
+      const nev = `Combo ${c.a+1}+${c.b+1} (${KOMBO_SZEREP_NEV[c.role]})`;
+      if (c.act.type !== "toggle")
+        bajok.push(`${nev}: it must be set to "Toggles between two values", otherwise the switch gets out of step with the FM3 and the next press may select the wrong channel`);
+      const jo = v => Number.isInteger(v) && v>=0 && v<=3;
+      if (!jo(c.act.on) || !jo(c.act.off) || c.act.on===c.act.off)
+        bajok.push(`${nev}: the two values ${c.act.on} and ${c.act.off} must be different FM3 channel numbers from 0 to 3 (A–D), otherwise the switch gets out of step with the FM3 and the next press may select the wrong channel`);
+    }
+
+    t.forEach((sw,gi)=>{
+      if((c.a===gi||c.b===gi) && sw.short.press && sw.short.type!=="none"){
+        bajok.push(`Combo ${c.a+1}+${c.b+1} uses switch ${gi+1},  `+
+                   `but it fires on press (${sw.short.name}) — the combo cannot be recognised`);
+      }
+    });
+
+    if(c.slot>=0){
+      const masik = aktivKombok.find((x,j)=>j!==i && x.slot===c.slot);
+      if(masik && masik.act.cc!==c.act.cc)
+        figyelmek.push(`Combo ${c.a+1}+${c.b+1} and combo ${masik.a+1}+${masik.b+1}  `+
+                       `writes to the same slot (${c.slot+1})`);
+    }
+  });
+
+  document.querySelectorAll(".kartya").forEach(k=>k.classList.remove("hiba"));
+  document.querySelectorAll(".akcio").forEach(a=>a.classList.remove("hibasSor"));
+  bajok.forEach(b=>{
+
+    const talalatok = [...b.matchAll(/Switch (\d+)(?:\s+(short|long))?/gi)];
+    if (!talalatok.length) return;
+    talalatok.forEach(m=>{
+      const i = +m[1]-1;
+      const sor = m[2] && document.querySelector(`.akcio[data-gomb="${i}"][data-melyik="${m[2].toLowerCase()}"]`);
+      if (sor) sor.classList.add("hibasSor");
+      else { const k=document.getElementById("kartya"+i); if(k) k.classList.add("hiba"); }
+    });
+  });
+
+  const cel=document.getElementById("ellTartalom");
+  let html="";
+  if(bajok.length)    html += `<p class="ellFej baj">Will not work — fix these before sending</p>`+
+                              `<ul>${bajok.map(b=>`<li class="baj">${b}</li>`).join("")}</ul>`;
+  if(figyelmek.length)html += `<p class="ellFej">Worth a look — it works either way</p>`+
+                              `<ul>${figyelmek.map(b=>`<li class="figyelem">${b}</li>`).join("")}</ul>`;
+  if(!html)           html = `<div class="rendben">No conflicts. The layout is ready to upload.</div>`;
+  cel.innerHTML = html;
+
+  kimenetTiltas(bajok.length > 0);
+
+  return bajok;
+}
+
+let HIBA_VAN = false;
+function kimenetTiltas(hiba){
+  HIBA_VAN = hiba;
+  for (const id of ["btnKuld", "btnIni", "btnKod"]) {
+    const b = document.getElementById(id);
+    if (!b) continue;
+    b.disabled = hiba;
+    b.title = hiba ? "There are errors in the layout — see the checks at the bottom of the page" : "";
+  }
+  document.querySelectorAll("#wsLista button[data-ren], #wsLista button[data-ow]").forEach(b => { b.disabled = hiba; });
+}
+
+const dlg=document.getElementById("szerk");
+
+function szerkesztoNyit(gomb,melyik){
+  const s=K[mod][gomb];
+  let a = melyik==="short" ? s.short : (s.hasLong? s.long : null);
+  if(!a){
+    a = {name:"",type:"toggle",cc:0,on:127,off:0,colorOn:[255,255,255],colorOff:[0,0,0],
+         hold:0,grid:-1,delta:0,press:false,group:0,nameOff:""};
+  }
+  szerkAlatt={gomb,melyik};
+  document.getElementById("szerkCim").textContent =
+    `Switch ${gomb+1} — ${melyik==="short"?"short":"long"} press`;
+  mNev.value=a.name; mTipus.value=a.type; mCC.value=a.cc; mOn.value=a.on; mOff.value=a.off;
+  mCC2.value=a.cc2||""; mCC3.value=a.cc3||"";
+  mSzin.value=rgbHex(a.colorOn); mSzinKi.value=rgbHex(a.colorOff);
+  mRacs.value=String(a.grid); mPress.value=String(!!a.press);
+  mNevKi.value=a.nameOff||"";
+
+  const csakEffekt = effektHely(gomb);
+  [...mTipus.options].forEach(o => { o.disabled = csakEffekt && o.value !== "toggle"; });
+  if (csakEffekt && mTipus.value !== "toggle") mTipus.value = "toggle";
+  document.getElementById("sugoTipus").textContent = csakEffekt
+    ? "Switches 1–3 are the effect switches: this press can only turn an FM3 block on and off."
+    : "";
+
+  const helyes = effektHely(gomb);
+  document.getElementById("mBlokkSor").style.display = helyes ? "" : "none";
+  if (helyes) {
+    mBlokk.innerHTML = BLOKK_LISTA.map(([k,n])=>`<option value="${k}">${n}</option>`).join("");
+    mBlokk.value = K.fxBlokk[melyik==="short"?"s":"l"][gomb];
+  }
+  sugoFrissit();
+  dlg.showModal();
+}
+
+function mezoHibak(){
+  const hiba = {};
+  if (!szerkAlatt) return hiba;
+  const cc = +mCC.value, on = +mOn.value, off = +mOff.value;
+  const tipus = mTipus.value;
+  const kuldo = tipus !== "scene" && tipus !== "none";
+
+  if (kuldo && cc === 0)    hiba.mCC = "CC 0 is Bank Select — the pedal itself uses it when it jumps to a preset. Pick another number.";
+  if (cc > 127 || cc < 0)   hiba.mCC = "Only 0-127 is allowed in MIDI.";
+  if (on  > 127 || on  < 0) hiba.mOn  = "Only 0-127 is allowed in MIDI.";
+  if (off > 127 || off < 0) hiba.mOff = "Only 0-127 is allowed in MIDI.";
+  for (const [mezo, ertek] of [["mCC2", mCC2.value], ["mCC3", mCC3.value]])
+    if (ertek !== "" && (+ertek > 127 || +ertek <= 0))
+      hiba[mezo] = "Only 1-127 is allowed here (CC 0 is Bank Select).";
+
+  if (kuldo && cc > 0) {
+    const mas = [];
+    K.normal.forEach((sw,i) => [["short",sw.short],["long",sw.hasLong?sw.long:null]].forEach(([mi,a])=>{
+      if (!a || (i === szerkAlatt.gomb && mi === szerkAlatt.melyik)) return;
+      if (a.type !== "scene" && a.type !== "none" && +a.cc === cc) mas.push(`switch ${i+1} ${mi}`);
+    }));
+    if (mas.length) hiba.mCC = `CC ${cc} is already used by ${mas.join(", ")} - one CC does one job on the FM3.`;
+  }
+  return hiba;
+}
+
+function mezoHibakRajz(){
+  const hiba = mezoHibak();
+  for (const id of ["mCC","mOn","mOff","mCC2","mCC3"]) {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle("hibasMezo", !!hiba[id]);
+  }
+  const uzenet = document.getElementById("mezoHibaSor");
+  if (!uzenet) return;
+  const lista = [...new Set(Object.values(hiba))];
+  uzenet.textContent = lista.join("  ");
+  uzenet.style.display = lista.length ? "" : "none";
+}
+
+function sugoFrissit(){
+  const blokkSugo = document.getElementById("sugoBlokk");
+  if (szerkAlatt && effektHely(szerkAlatt.gomb)) {
+    const toggle = mTipus.value === "toggle";
+    mBlokk.disabled = !toggle;
+    blokkSugo.textContent = toggle
+      ? "The effect on the FM3 that this press switches. The label above is free text — "+
+        "if you put a Pitch block here, rename the label to PITCH. "+
+        "Assign the same CC to this block on the FM3 (Setup → MIDI/Remote)."
+      : "Only an on/off toggle follows an FM3 block. With this action the block setting has no effect.";
+  } else {
+    blokkSugo.textContent = "";
+  }
+  const h=mNev.value.length*18;
+  document.getElementById("sugoNev").textContent =
+    `On the scene row it will be ${h} px wide. The display is 240 px — ${h>240?"IT WOULD BE CUT OFF.":"it fits."}`;
+
+  const pressSugo = document.getElementById("sugoPress");
+  const vanHosszu = szerkAlatt ? !!K.normal[szerkAlatt.gomb].hasLong : false;
+  const rovidetSzerkesztunk = szerkAlatt ? szerkAlatt.melyik === "short" : false;
+  const hosszutSzerkesztunk = szerkAlatt ? szerkAlatt.melyik === "long" : false;
+
+  const tiltva = vanHosszu && rovidetSzerkesztunk;
+  document.getElementById("mezoPress").style.display = hosszutSzerkesztunk ? "none" : "";
+  mPress.disabled = tiltva;
+  if (hosszutSzerkesztunk) mPress.value = "true";
+  else if (tiltva) mPress.value = "false";
+  mezoHibakRajz();
+  pressSugo.textContent = hosszutSzerkesztunk
+    ? ""
+    : tiltva
+    ? "Set to On release, and locked: this switch has a long press, so while it is down "+
+      "there is no way to tell yet which one it will be."
+    : "For a combo member, release is correct — firing on press makes the combo unrecognisable. "+
+      "Elsewhere (for example on TAP) press is better, because it reacts at once.";
+}
+mNev.addEventListener("input",sugoFrissit);
+for (const id of ["mCC","mOn","mOff","mCC2","mCC3"])
+  document.getElementById(id).addEventListener("input", mezoHibakRajz);
+mTipus.addEventListener("change",sugoFrissit);
+
+dlg.addEventListener("close",()=>{
+  if(dlg.returnValue!=="ok" || !szerkAlatt) return;
+  const {gomb,melyik}=szerkAlatt;
+  const uj={
+    name:mNev.value, type:mTipus.value,
+    cc:+mCC.value||0, on:+mOn.value||0, off:+mOff.value||0,
+    cc2:+mCC2.value||0, cc3:+mCC3.value||0,
+    colorOn:hexRgb(mSzin.value), colorOff:hexRgb(mSzinKi.value),
+    hold:0, grid:+mRacs.value, delta:0, press:mPress.value==="true", group:0,
+    nameOff:mNevKi.value.trim()
+  };
+  const s=K[mod][gomb];
+  const regi = melyik==="short" ? s.short : (s.hasLong?s.long:null);
+  if(regi){ uj.hold=regi.hold; uj.delta=regi.delta; uj.group=regi.group; }
+  if(melyik==="short") s.short=uj; else { s.long=uj; s.hasLong = uj.type!=="none"; }
+  if (effektHely(gomb)) K.fxBlokk[melyik==="short"?"s":"l"][gomb] = mBlokk.value;
+
+  if (s.hasLong && s.short.press) {
+    s.short.press = false;
+    alert(`Switch ${gomb+1}: the short press now fires on release.\n\n`+
+          `It was set to fire on press, but this switch now has a long press — `+
+          `while the switch is down there is no way to tell yet which one it will be. `+
+          `The setting has been changed for you.`);
+  }
+  mindenRajz();
+});
+
+function ccNev(a){
+  return a.type==="tap" ? "CC_TAP" : String(a.cc);
+}
+
+const TIPUS_KOD={toggle:"ACTION_TOGGLE",momentary:"ACTION_MOMENTARY",scene:"ACTION_SCENE",
+  tap:"ACTION_TAP",modeToggle:"ACTION_MODE_TOGGLE",exclusive:"ACTION_EXCLUSIVE",
+  looper:"ACTION_LOOPER_TRANSPORT",none:"ACTION_NONE"};
+
+function komboStatusNev(c, melyik){
+  const ertek = (melyik === "on") ? c.act.on : c.act.off;
+  if (c.role === "amp") return ["AMP_A_STATUS","AMP_B_STATUS","AMP_C_STATUS","AMP_D_STATUS"][ertek] || '""';
+  if (c.role === "dly") return ["DLY_A_STATUS","DLY_B_STATUS","DLY_C_STATUS","DLY_D_STATUS"][ertek] || '""';
+  if (c.role === "byp")  return (melyik === "on") ? "LOOP_BYPASS_STATUS_ON" : "LOOP_BYPASS_STATUS_OFF";
+  const sz = (melyik === "on") ? c.statusOn : c.statusOff;
+  return sz ? `"${sz}"` : '""';
+}
+
+function constFormara(t){
+  return t
+    .replace(/^inline const char \*([A-Z][A-Z0-9_]*)/gm, "const char *const $1")
+    .replace(/^inline (uint8_t|uint16_t|uint32_t|int8_t|int16_t|int32_t|bool|RGBColor|SwitchConfig|ComboConfig)(\s+)([A-Z][A-Z0-9_]*)/gm, "const $1$2$3");
+}
+
+const FX_NEVEK = {
+  FX_DRIVE:"DRIVE", FX_COMP:"COMP", FX_CHORUS:"CHORUS", FX_FLANGER:"FLANGER",
+  FX_DELAY:"DELAY", FX_REVERB:"REVERB", FX_PHASER:"PHASER", FX_TAP:"TAP",
+  FX_PRESET_UP:"PRESET+", FX_PRESET_DN:"PRESET-",
+};
+const SZIN_KONST = {
+  COLOR_RED:[255,0,0], COLOR_GREEN:[0,255,0], COLOR_BLUE:[0,0,255],
+  COLOR_YELLOW:[255,255,0], COLOR_CYAN:[0,255,255], COLOR_MAGENTA:[255,0,255],
+  COLOR_WHITE:[255,255,255], COLOR_ORANGE:[255,128,0], COLOR_PURPLE:[50,0,255],
+  COLOR_WHITE_DIM:[30,30,30], COLOR_OFF:[0,0,0], COLOR_LIGHT_BLUE:[80,160,255],
+  COLOR_BROWN:[200,90,20], COLOR_PALE_BLUE:[40,90,160], COLOR_PINK:[255,90,160],
+  COLOR_TEAL:[0,128,128], COLOR_PETROL:[0,100,130], COLOR_NAVY:[0,25,112],
+  COLOR_BLUE_SOFT:[36,72,114], COLOR_NAVY_LIT:[40,40,180],
+};
+const TIPUS_VISSZA = {
+  ACTION_TOGGLE:"toggle", ACTION_MOMENTARY:"momentary", ACTION_SCENE:"scene",
+  ACTION_TAP:"tap", ACTION_MODE_TOGGLE:"modeToggle", ACTION_EXCLUSIVE:"exclusive",
+  ACTION_LOOPER_TRANSPORT:"looper", ACTION_NONE:"none",
+};
+
+function mezokre(szoveg){
+  const ki=[]; let mely=0, akt="", idezet=false;
+  for(const ch of szoveg){
+    if(ch==='"'){ idezet=!idezet; akt+=ch; continue; }
+    if(idezet){ akt+=ch; continue; }
+    if(ch==='{'){ mely++; akt+=ch; continue; }
+    if(ch==='}'){ mely--; akt+=ch; continue; }
+    if(ch===',' && mely===0){ ki.push(akt.trim()); akt=""; continue; }
+    akt+=ch;
+  }
+  if(akt.trim()) ki.push(akt.trim());
+  return ki;
+}
+
+function szinFeloldas(sz){
+  sz=sz.trim();
+  if(SZIN_KONST[sz]) return SZIN_KONST[sz].slice();
+  const m=sz.match(/\{\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\}/);
+  if(m) return [+m[1],+m[2],+m[3]];
+  return [255,255,255];
+}
+function nevFeloldas(n){
+  n=n.trim();
+  if(n.startsWith('"')) return n.slice(1,-1);
+  return FX_NEVEK[n] || n;
+}
+
+function akcioBeolvas(blokk){
+  const f = mezokre(blokk.replace(/^\{/,"").replace(/\}$/,""));
+  if(f.length < 13) return null;
+  return {
+    name: nevFeloldas(f[0]),
+    type: TIPUS_VISSZA[f[1].trim()] || "toggle",
+    cc:+f[2]||0, cc2:+f[3]||0, cc3:+f[4]||0,
+    on:+f[5]||0, off:+f[6]||0,
+    colorOn: szinFeloldas(f[7]), colorOff: szinFeloldas(f[8]),
+    hold:+f[9]||0, grid:+f[10],
+    delta:+f[11]||0, press: f[12].trim()==="true",
+    group: f.length>13 ? (+f[13]||0) : 0,
+    nameOff: f.length>14 ? f[14].trim().replace(/^"|"$/g,"") : "",
+  };
+}
+
+function hBeolvas(szoveg){
+  szoveg = constFormara(szoveg);
+  const uj = szerkezetMasolat(K);
+
+  const m = szoveg.match(/const\s+SwitchConfig\s+SWITCH_CONFIG\s*\[10\]\s*=\s*\{([\s\S]*?)\n\};/);
+  if(!m) throw new Error("Cannot find the SWITCH_CONFIG array in the file.");
+
+  const test = m[1];
+  const gombok = []; let mely=0, akt="", idezet=false;
+  for(const ch of test){
+    if(ch==='"') idezet=!idezet;
+    if(!idezet && ch==='{'){ if(mely===0){akt="";} mely++; if(mely===1) continue; }
+    if(!idezet && ch==='}'){ mely--; if(mely===0){ gombok.push(akt); continue; } }
+    if(mely>0) akt+=ch;
+  }
+  if(gombok.length!==10) throw new Error(`Expected 10 switches, the file has ${gombok.length}.`);
+
+  gombok.forEach((g,i)=>{
+
+    const reszek=[]; let m2=0, a2="", iq=false;
+    for(const ch of g){
+      if(ch==='"') iq=!iq;
+      if(!iq && ch==='{'){ if(m2===0) a2=""; m2++; }
+      if(m2>0) a2+=ch;
+      if(!iq && ch==='}'){ m2--; if(m2===0){ reszek.push(a2); a2=""; } }
+    }
+    const rovid = akcioBeolvas(reszek[0]||"");
+    if(rovid) uj.normal[i].short = rovid;
+    const hosszu = reszek[1] ? akcioBeolvas(reszek[1]) : null;
+
+    const zaro = /\b(true|false)\s*,?\s*$/.exec(g);
+    uj.normal[i].hasLong = zaro ? (zaro[1] === "true") : !!hosszu;
+    if(hosszu) uj.normal[i].long = hosszu;
+  });
+
+  const gl = szoveg.match(/GRID_LABELS\s*\[6\]\s*=\s*\{([^}]*)\}/);
+  if(gl) uj.kijelzo.racsCimkek = gl[1].split(",").map(x=>x.trim().replace(/^"|"$/g,""));
+
+  const fel = (nev) => {
+    const r = szoveg.match(new RegExp('const char \\*const ' + nev + '\\s*=\\s*"([^"]*)"'));
+    return r ? r[1] : null;
+  };
+  ["A","B","C","D"].forEach((c,i)=>{
+    const a1 = fel("AMP_"+c+"_STATUS"); if(a1) uj.feliratok.amp[i] = a1;
+    const d1 = fel("DLY_"+c+"_STATUS"); if(d1) uj.feliratok.dly[i] = d1;
+  });
+  const lb = fel("LOOP_BYPASS_STATUS_ON");  if(lb) uj.feliratok.looperBe = lb;
+  const lk = fel("LOOP_BYPASS_STATUS_OFF"); if(lk) uj.feliratok.looperKi = lk;
+
+  const poz = (nev,kulcs)=>{
+    const r=szoveg.match(new RegExp("const int16_t\\s+"+nev+"\\s*=\\s*(\\d+)"));
+    if(r) uj.sorok[kulcs]=+r[1];
+  };
+  poz("INFO_ROW_Y","info1"); poz("INFO_ROW2_Y","info2");
+  poz("PRESET_NAME_Y","presetNev"); poz("SCENE_NAME_Y","sceneNev");
+
+  const v1=szoveg.match(/TEXT_VOL1\s*=\s*"([^"]*)"/); if(v1) uj.vol.felirat1=v1[1];
+  const v2=szoveg.match(/TEXT_VOL2\s*=\s*"([^"]*)"/); if(v2) uj.vol.felirat2=v2[1];
+  const vsz=(nev,kulcs)=>{
+    const r=szoveg.match(new RegExp("const uint16_t\\s+"+nev+"\\s*=\\s*(0[xX][0-9a-fA-F]+|\\d+)"));
+    if(r) uj.vol[kulcs]=parseInt(r[1]);
+  };
+  vsz("DISPLAY_COLOR_VOL_LABEL","szinFelirat");
+  vsz("DISPLAY_COLOR_VOL_ACTIVE","szinAktiv");
+  vsz("DISPLAY_COLOR_VOL_INACTIVE","szinTetlen");
+
+  const fb=szoveg.match(/WATCH_ENABLED\s*=\s*(true|false)/);
+  if(fb) uj.figyelo.be = fb[1]==="true";
+  const fu=szoveg.match(/WATCH_INTERVAL_MS\s*=\s*(\d+)/);
+  if(fu) uj.figyelo.utem = +fu[1];
+  const fc=szoveg.match(/WATCH_CSENDES\s*=\s*(true|false)/);
+  if(fc) uj.figyelo.csendes = fc[1]==="true";
+
+  const ip=szoveg.match(/FM3_DEFAULT_PRESET\s*=\s*(-?\d+)/);
+  { const m = szoveg.match(/FM3_UGRAS_INDULASKOR\s*=\s*(true|false)/);
+    if (m) uj.indulas.ugras = (m[1] === "true"); }
+  { const m = szoveg.match(/NOT_SYNC_MENET_KOZBEN\s*=\s*(true|false)/);
+    if (m) uj.indulas.notsync = (m[1] === "true"); }
+  { const m = szoveg.match(/EFFEKT_NINCS_SZIN\s*=\s*\{\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (m) uj.indulas.nincsSzin = rgbHex([+m[1],+m[2],+m[3]]); }
+  { const m = szoveg.match(/EFFEKT_NINCS_JELZES\s*=\s*\{\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)/);
+    if (m) uj.indulas.nincsJelzes = rgbHex([+m[1],+m[2],+m[3]]); }
+  { const m = szoveg.match(/EFFEKT_NINCS_VILLANAS\s*=\s*(\d+)/);
+    if (m) uj.indulas.nincsVillanas = +m[1]; }
+  { const m = szoveg.match(/EFFEKT_NINCS_IDO_MS\s*=\s*(\d+)/);
+    if (m) uj.indulas.nincsIdo = +m[1]; }
+  if(ip) uj.indulas.preset = +ip[1];
+  const ib=szoveg.match(/FM3_DEFAULT_BPM\s*=\s*(\d+)/);
+  if(ib) uj.indulas.bpm = +ib[1];
+
+  const meret = (nev,kulcs)=>{
+    const r=szoveg.match(new RegExp("const\\s+uint8_t\\s+"+nev+"\\s*=\\s*(\\d+)"));
+    if(r) uj.kijelzo.meretek[kulcs]=+r[1];
+  };
+  meret("GRID_TEXT_SIZE","racs"); meret("PRESET_NAME_SIZE","presetNev");
+  meret("SCENE_NAME_SIZE","sceneNev"); meret("INFO_STATUS_TEXT_SIZE","info");
+
+  const szin = (nev,kulcs)=>{
+    const r=szoveg.match(new RegExp("const\\s+uint16_t\\s+"+nev+"\\s*=\\s*(0[xX][0-9a-fA-F]+|\\d+)"));
+    if(r) uj.kijelzo.szinek[kulcs]=parseInt(r[1]);
+  };
+  szin("DISPLAY_COLOR_MAIN_NAME","sceneNev");     szin("DISPLAY_COLOR_PRESET_NAME","presetNev");
+  szin("DISPLAY_COLOR_PRESET_NUM","presetSzam");  szin("DISPLAY_COLOR_BPM_INFO","bpm");
+  szin("DISPLAY_COLOR_INFO_STATUS","info");       szin("DISPLAY_COLOR_GRID_ON_BG","racsBeHatter");
+  szin("DISPLAY_COLOR_GRID_ON_FG","racsBeSzoveg");szin("DISPLAY_COLOR_GRID_OFF_FG","racsKiSzoveg");
+  szin("DISPLAY_COLOR_GRID_ABSENT_FG","nincsBlokk"); szin("DISPLAY_COLOR_GRID_STRIKE","athuzas");
+
+  {
+    const regiMidi = szerkezetMasolat(uj.midi || K.midi);
+    uj.midi = szerkezetMasolat(regiMidi);
+    const szam = nev => {
+      const r = szoveg.match(new RegExp("const\\s+uint8_t\\s+" + nev + "\\s*=\\s*(\\d+)"));
+      return r ? +r[1] : null;
+    };
+    Object.keys(MIDI_FW_NEV).forEach(k=>{
+      const v = szam(MIDI_FW_NEV[k]);
+      if (v !== null) uj.midi[k] = v;
+    });
+    const mc = szam("MIDI_CHANNEL");
+    if (mc !== null) uj.midi.channel = mc + 1;
+
+    uj.fxBlokk = szerkezetMasolat(uj.fxBlokk || K.fxBlokk || ALAP_KONFIG.fxBlokk);
+    [["s","FXBSWS"],["l","FXBSWL"]].forEach(([o,elotag])=>{
+      for (let i=0;i<3;i++){
+        const r = szoveg.match(new RegExp("const\\s+uint16_t\\s+" + elotag + (i+1) + "\\s*=\\s*BLOCK_([A-Z0-9]+)"));
+        if (r) uj.fxBlokk[o][i] = r[1];
+      }
+    });
+
+    uj.csatorna = szerkezetMasolat(uj.csatorna || K.csatorna || ALAP_KONFIG.csatorna);
+    const ujFormatum = /CSATORNA1_BLOKK/.test(szoveg);
+    const kombTabla = (szoveg.match(/COMBO_CONFIG[^=]*=\s*\{([\s\S]*?)\n\};/) || ["",""])[1];
+    [[1,"CC_AMP_CHANNEL"],[2,"CC_DELAY_CHANNEL"]].forEach(([n,ccNev])=>{
+      const r = szoveg.match(new RegExp("const\\s+uint16_t\\s+CSATORNA" + n + "_BLOKK\\s*=\\s*BLOCK_([A-Z0-9]+)"));
+      if (r) uj.csatorna[n-1].blokk = r[1];
+
+      uj.csatorna[n-1].be = ujFormatum ? kombTabla.indexOf(ccNev) >= 0 : true;
+    });
+    kNormalizal(uj);
+  }
+
+  uj.grid.normal = uj.kijelzo.racsCimkek.slice();
+  return uj;
+}
+
+const INI_TIPUS = { toggle:"toggle", momentary:"momentary", scene:"scene", tap:"tap",
+                    modeToggle:"mode_toggle", exclusive:"exclusive", looper:"looper_transport", none:"none" };
+const INI_AKCIO_MEZO = ["name","type","cc","cc2","cc3","on","off","color_on","color_off",
+                        "hold","grid","delta","press","group","name_off"];
+
+function iniFnv(t){
+  let h = 0x811c9dc5;
+  for (let i=0;i<t.length;i++){ h ^= t.charCodeAt(i) & 0xFF; h = Math.imul(h, 0x01000193) >>> 0; }
+  return (h>>>0).toString(16).toUpperCase().padStart(8,"0");
+}
+const iniRgb  = c => [0,1,2].map(i=>((c&&c[i])|0).toString(16).toUpperCase().padStart(2,"0")).join("");
+const iniHex4 = v => "0x" + ((v|0)>>>0).toString(16).toUpperCase().padStart(4,"0");
+const iniHex2 = v => "0x" + ((v|0)>>>0).toString(16).toUpperCase().padStart(2,"0");
+const iniHexSzin = h => (h||"#000000").replace("#","").toUpperCase();
+
+function iniAkcio(sor, elotag, a, nameOffKulcs){
+  const v = {
+    name: a.name||"", type: INI_TIPUS[a.type]||"none", cc: a.cc|0, cc2: a.cc2|0, cc3: a.cc3|0,
+    on: a.on|0, off: a.off|0, color_on: iniRgb(a.colorOn), color_off: iniRgb(a.colorOff),
+    hold: a.hold|0, grid: (a.grid|0)+1, delta: a.delta|0, press: a.press?1:0,
+    group: a.group|0, name_off: a.nameOff||""
+  };
+  INI_AKCIO_MEZO.forEach(m => sor(elotag + (m==="name_off" ? (nameOffKulcs||"name_off") : m), v[m]));
+}
+
+function iniEloallit(nev){
+  const ki = [];
+  const sor = (k,v) => ki.push(k + " = [" + v + "]");
+  const szak = n => ki.push("", "[" + n + "]");
+  const m = K.midi, kz = K.kijelzo, f = K.feliratok, ind = K.indulas;
+
+  ki.push("; MC10 config - format 2");
+  szak("file");    sor("format", 2); sor("name", nev||"");
+  szak("midi");
+  sor("channel", m.channel|0);
+  [["channel1_cc","ampCh"],["channel2_cc","dlyCh"],["looper_bypass_cc","loopBypass"],
+   ["looper_rec_cc","loopRec"],["looper_play_cc","loopPlay"],["looper_stop_cc","loopStop"],
+   ["looper_erase_cc","loopUndo"],["looper_reverse_cc","loopReverse"],["looper_half_cc","loopHalf"],
+   ["looper_once_cc","loopOnce"],["encoder_vol1_cc","encVol1"],["encoder_vol2_cc","encVol2"],
+   ["exp1_cc","exp1"],["exp2_cc","exp2"]].forEach(([k,kk]) => sor(k, m[kk]|0));
+  szak("fx");
+  ["s","l"].forEach(o => [0,1,2].forEach(i => sor("fxbsw"+o+(i+1), iniHex2(BLOKK_ID[K.fxBlokk[o][i]]))));
+  szak("channel");
+  sor("ch1_block", iniHex2(BLOKK_ID[K.csatorna[0].blokk]));
+  sor("ch2_block", iniHex2(BLOKK_ID[K.csatorna[1].blokk]));
+  szak("labels");
+  ["a","b","c","d"].forEach((x,i) => sor("ch1_"+x, f.amp[i]||""));
+  ["a","b","c","d"].forEach((x,i) => sor("ch2_"+x, f.dly[i]||""));
+  sor("looper_on", f.looperBe||""); sor("looper_off", f.looperKi||"");
+  sor("vol1", K.vol.felirat1||"");  sor("vol2", K.vol.felirat2||"");
+  for (let i=0;i<6;i++) sor("grid"+(i+1), kz.racsCimkek[i]||"");
+  szak("display");
+  sor("grid_text_size", kz.meretek.racs|0);   sor("preset_name_size", kz.meretek.presetNev|0);
+  sor("scene_name_size", kz.meretek.sceneNev|0); sor("info_text_size", kz.meretek.info|0);
+  sor("info_row1_y", K.sorok.info1|0);  sor("info_row2_y", K.sorok.info2|0);
+  sor("preset_name_y", K.sorok.presetNev|0); sor("scene_name_y", K.sorok.sceneNev|0);
+  [["color_scene_name",kz.szinek.sceneNev],["color_preset_name",kz.szinek.presetNev],
+   ["color_preset_num",kz.szinek.presetSzam],["color_bpm",kz.szinek.bpm],["color_info",kz.szinek.info],
+   ["color_grid_on_bg",kz.szinek.racsBeHatter],["color_grid_on_fg",kz.szinek.racsBeSzoveg],
+   ["color_grid_off_fg",kz.szinek.racsKiSzoveg],["color_grid_absent",kz.szinek.nincsBlokk],
+   ["color_grid_strike",kz.szinek.athuzas],["color_vol_label",K.vol.szinFelirat],
+   ["color_vol_active",K.vol.szinAktiv],["color_vol_idle",K.vol.szinTetlen]].forEach(([k,v]) => sor(k, iniHex4(v)));
+  szak("startup");
+  sor("jump", ind.ugras?1:0); sor("preset", ind.preset|0); sor("bpm", ind.bpm|0);
+  sor("not_sync_running", ind.notsync?1:0);
+  sor("absent_color", iniHexSzin(ind.nincsSzin)); sor("absent_flash_color", iniHexSzin(ind.nincsJelzes));
+  sor("absent_flashes", ind.nincsVillanas|0); sor("absent_flash_ms", ind.nincsIdo|0);
+  K.normal.forEach((sw,i) => {
+    szak("sw"+(i+1));
+    sor("has_long", sw.hasLong?1:0);
+    iniAkcio(sor, "short_", sw.short);
+    iniAkcio(sor, "long_",  sw.hasLong ? sw.long : ures());
+  });
+  K.combos.forEach((c,i) => {
+    szak("combo"+(i+1));
+    sor("switch_a", c.a+1); sor("switch_b", c.b+1);
+
+    const aktiv = komboAktiv(c);
+    iniAkcio(sor, "", aktiv ? c.act : uresKombo(), "action_name_off");
+    sor("slot",             aktiv ? (c.slot|0)+1 : 0);
+    sor("status_on",        aktiv ? komboStatusSzoveg(c,"on")  : "");
+    sor("status_off",       aktiv ? komboStatusSzoveg(c,"off") : "");
+    sor("name_off",         aktiv ? (c.nameOff||"") : "");
+    sor("in_looper_mode",   aktiv && c.activeInLooperMode ? 1 : 0);
+    sor("show_on_leds",     aktiv && c.showStateOnLeds ? 1 : 0);
+    sor("status_color",     iniHex4(aktiv ? c.statusColor : 0));
+    sor("status_color_off", iniHex4(aktiv ? c.statusColorOff : 0));
+  });
+  ki.push("", "[end]");
+  const torzs = ki.join("\n") + "\n";
+  return torzs + "checksum = [" + iniFnv(torzs) + "]\n";
+}
+
+function uresKombo(){
+  return { name:"", type:"none", cc:0, cc2:0, cc3:0, on:0, off:0,
+           colorOn:[0,0,0], colorOff:[0,0,0], hold:0, grid:-1, delta:0, press:false, group:0, nameOff:"" };
+}
+
+function ures(){
+
+  return { name:"", type:"toggle", cc:0, cc2:0, cc3:0, on:0, off:0,
+           colorOn:[0,0,0], colorOff:[0,0,0], hold:0, grid:0, delta:0, press:false, group:0, nameOff:"" };
+}
+
+function komboStatusSzoveg(c, melyik){
+  const ertek = melyik==="on" ? c.act.on : c.act.off;
+  if (c.role === "amp") return K.feliratok.amp[ertek] || "";
+  if (c.role === "dly") return K.feliratok.dly[ertek] || "";
+  if (c.role === "byp") return melyik==="on" ? (K.feliratok.looperBe||"") : (K.feliratok.looperKi||"");
+  return (melyik==="on" ? c.statusOn : c.statusOff) || "";
+}
+
+const INI_TIPUS_VISSZA = Object.fromEntries(Object.entries(INI_TIPUS).map(([a,b])=>[b,a]));
+const INI_ID_BLOKK     = Object.fromEntries(BLOKK_LISTA.map(b => [b[2], b[0]]));
+
+function iniBeolvas(szoveg){
+
+  const k = szoveg.indexOf("checksum = [");
+  if (k < 0) throw new Error("no checksum");
+  const vart = /^checksum = \[([0-9A-Fa-f]{8})\]/.exec(szoveg.slice(k));
+  if (!vart) throw new Error("bad checksum line");
+  if (iniFnv(szoveg.slice(0, k)) !== vart[1].toUpperCase()) throw new Error("checksum mismatch");
+
+  const ad = {};
+  let szak = "";
+  szoveg.split(/\r?\n/).forEach(s => {
+    s = s.trim();
+    if (!s || s[0] === ";" || s[0] === "#") return;
+    const eq = s.indexOf("=");
+    if (eq < 0) { if (s[0]==="[" && s.endsWith("]")) szak = s.slice(1,-1); return; }
+    const kulcs = s.slice(0, eq).trim();
+    const ny = s.indexOf("[", eq), z = s.lastIndexOf("]");
+    if (ny < 0 || z < ny) throw new Error("bad line: " + kulcs);
+    ad[szak + "." + kulcs] = s.slice(ny + 1, z);
+  });
+  const v = kulcs => { if (!(kulcs in ad)) throw new Error("missing key: " + kulcs); return ad[kulcs]; };
+  const sz = kulcs => +v(kulcs);
+  const b  = kulcs => v(kulcs) === "1";
+  const blokk = kulcs => { const id = parseInt(v(kulcs),16); const nev = INI_ID_BLOKK[id];
+                           if (nev === undefined) throw new Error("unknown FM3 block id: 0x"+id.toString(16)); return nev; };
+  const rgb = kulcs => { const h = v(kulcs); return [0,2,4].map(i => parseInt(h.substr(i,2),16)); };
+
+  if (sz("file.format") !== 2) throw new Error("format " + v("file.format") + " (this editor writes format 2)");
+
+  const uj = szerkezetMasolat(ALAP_KONFIG);
+  uj.midi.channel = sz("midi.channel");
+  [["channel1_cc","ampCh"],["channel2_cc","dlyCh"],["looper_bypass_cc","loopBypass"],
+   ["looper_rec_cc","loopRec"],["looper_play_cc","loopPlay"],["looper_stop_cc","loopStop"],
+   ["looper_erase_cc","loopUndo"],["looper_reverse_cc","loopReverse"],["looper_half_cc","loopHalf"],
+   ["looper_once_cc","loopOnce"],["encoder_vol1_cc","encVol1"],["encoder_vol2_cc","encVol2"],
+   ["exp1_cc","exp1"],["exp2_cc","exp2"]].forEach(([a,c]) => uj.midi[c] = sz("midi."+a));
+  ["s","l"].forEach(o => [0,1,2].forEach(i => uj.fxBlokk[o][i] = blokk("fx.fxbsw"+o+(i+1))));
+  uj.csatorna[0].blokk = blokk("channel.ch1_block");
+  uj.csatorna[1].blokk = blokk("channel.ch2_block");
+  ["a","b","c","d"].forEach((x,i) => { uj.feliratok.amp[i] = v("labels.ch1_"+x); uj.feliratok.dly[i] = v("labels.ch2_"+x); });
+  uj.feliratok.looperBe = v("labels.looper_on"); uj.feliratok.looperKi = v("labels.looper_off");
+  uj.vol.felirat1 = v("labels.vol1"); uj.vol.felirat2 = v("labels.vol2");
+  uj.kijelzo.racsCimkek = [1,2,3,4,5,6].map(i => v("labels.grid"+i));
+  uj.grid.normal = uj.kijelzo.racsCimkek.slice();
+  uj.kijelzo.meretek.racs = sz("display.grid_text_size");
+  uj.kijelzo.meretek.presetNev = sz("display.preset_name_size");
+  uj.kijelzo.meretek.sceneNev = sz("display.scene_name_size");
+  uj.kijelzo.meretek.info = sz("display.info_text_size");
+  uj.sorok.info1 = sz("display.info_row1_y"); uj.sorok.info2 = sz("display.info_row2_y");
+  uj.sorok.presetNev = sz("display.preset_name_y"); uj.sorok.sceneNev = sz("display.scene_name_y");
+  const szin = kulcs => parseInt(v(kulcs),16);
+  uj.kijelzo.szinek.sceneNev = szin("display.color_scene_name");
+  uj.kijelzo.szinek.presetNev = szin("display.color_preset_name");
+  uj.kijelzo.szinek.presetSzam = szin("display.color_preset_num");
+  uj.kijelzo.szinek.bpm = szin("display.color_bpm");
+  uj.kijelzo.szinek.info = szin("display.color_info");
+  uj.kijelzo.szinek.racsBeHatter = szin("display.color_grid_on_bg");
+  uj.kijelzo.szinek.racsBeSzoveg = szin("display.color_grid_on_fg");
+  uj.kijelzo.szinek.racsKiSzoveg = szin("display.color_grid_off_fg");
+  uj.kijelzo.szinek.nincsBlokk = szin("display.color_grid_absent");
+  uj.kijelzo.szinek.athuzas = szin("display.color_grid_strike");
+  uj.vol.szinFelirat = szin("display.color_vol_label");
+  uj.vol.szinAktiv = szin("display.color_vol_active");
+  uj.vol.szinTetlen = szin("display.color_vol_idle");
+  uj.indulas.ugras = b("startup.jump");
+  uj.indulas.preset = sz("startup.preset");
+  uj.indulas.bpm = sz("startup.bpm");
+  uj.indulas.notsync = b("startup.not_sync_running");
+  uj.indulas.nincsSzin = "#" + v("startup.absent_color").toLowerCase();
+  uj.indulas.nincsJelzes = "#" + v("startup.absent_flash_color").toLowerCase();
+  uj.indulas.nincsVillanas = sz("startup.absent_flashes");
+  uj.indulas.nincsIdo = sz("startup.absent_flash_ms");
+
+  const akcio = (elotag, p, nameOffKulcs) => ({
+    name: v(p+elotag+"name"), type: INI_TIPUS_VISSZA[v(p+elotag+"type")] || "none",
+    cc: sz(p+elotag+"cc"), cc2: sz(p+elotag+"cc2"), cc3: sz(p+elotag+"cc3"),
+    on: sz(p+elotag+"on"), off: sz(p+elotag+"off"),
+    colorOn: rgb(p+elotag+"color_on"), colorOff: rgb(p+elotag+"color_off"),
+    hold: sz(p+elotag+"hold"), grid: sz(p+elotag+"grid") - 1, delta: sz(p+elotag+"delta"),
+    press: b(p+elotag+"press"), group: sz(p+elotag+"group"),
+    nameOff: v(p + elotag + (nameOffKulcs || "name_off"))
+  });
+  uj.normal = [];
+  for (let i=1;i<=10;i++){
+    const p = "sw"+i+".";
+    uj.normal.push({ short: akcio("short_", p), long: akcio("long_", p), hasLong: b(p+"has_long") });
+  }
+  uj.combos = [];
+  for (let i=1;i<=6;i++){
+    const p = "combo"+i+".";
+    const act = akcio("", p, "action_name_off");
+    const c = { a: sz(p+"switch_a")-1, b: sz(p+"switch_b")-1, act,
+                slot: sz(p+"slot")-1, statusOn: v(p+"status_on"), statusOff: v(p+"status_off"),
+                nameOff: v(p+"name_off"), activeInLooperMode: b(p+"in_looper_mode"),
+                showStateOnLeds: b(p+"show_on_leds"),
+                statusColor: szin(p+"status_color"), statusColorOff: szin(p+"status_color_off") };
+
+    c.role = ALAP_KONFIG.combos[i-1].role;
+    uj.combos.push(c);
+  }
+
+  [["amp",0],["dly",1]].forEach(([szerep,ix])=>{
+    const elso = uj.combos.find(c => c.role === szerep);
+    if (elso && elso.act.type === "none") {
+      uj.csatorna[ix].be = false;
+      uj.combos.forEach((c,j) => { if (c.role === szerep) { c.act = szerkezetMasolat(ALAP_KONFIG.combos[j].act);
+        c.slot = ALAP_KONFIG.combos[j].slot; c.statusOn = ALAP_KONFIG.combos[j].statusOn;
+        c.statusOff = ALAP_KONFIG.combos[j].statusOff; c.nameOff = ALAP_KONFIG.combos[j].nameOff;
+        c.activeInLooperMode = ALAP_KONFIG.combos[j].activeInLooperMode;
+        c.showStateOnLeds = ALAP_KONFIG.combos[j].showStateOnLeds;
+        c.statusColor = ALAP_KONFIG.combos[j].statusColor; c.statusColorOff = ALAP_KONFIG.combos[j].statusColorOff; } });
+    } else uj.csatorna[ix].be = true;
+  });
+  kNormalizal(uj);
+  return uj;
+}
+
+const WS_BAUD = 115200;
+let wsPort = null, wsIro = null, wsOlvaso = null, wsMaradek = "", wsFirmware = "";
+
+let wsFuggoOlvasas = null;
+
+function wsTamogatott(){ return typeof navigator !== "undefined" && !!navigator.serial; }
+
+function wsAzonositoBont(sor){
+  const m = /^MC10 (\S+) FORMAT (\d+) NAME ?(.*)$/.exec((sor||"").trim());
+  if (!m) return null;
+  return { firmware: m[1], format: +m[2], nev: m[3] };
+}
+
+function wsOlvasasBont(puffer){
+  const m = /^BEGIN (\d+)\n/.exec(puffer);
+  if (!m) return { kesz:false };
+  const eleje = m[0].length, hossz = +m[1];
+  if (puffer.length < eleje + hossz + 4) return { kesz:false };
+  const szoveg = puffer.substr(eleje, hossz);
+  const veg = puffer.substr(eleje + hossz, 4);
+  if (veg !== "END\n") return { kesz:false, hiba:"a lezaro END hianyzik" };
+  return { kesz:true, szoveg, maradek: puffer.substr(eleje + hossz + 4) };
+}
+
+function wsIrasParancs(szoveg, fajl){
+  const bajt = new TextEncoder().encode(szoveg);
+  return { sor: "WRITE " + (fajl ? fajl + " " : "") + bajt.length + "\n", adat: bajt };
+}
+
+async function wsCsatlakoz(){
+  if (!wsTamogatott()) { alert("WebSerial works in desktop Chrome or Edge.\nIn other browsers: save the file, then hold SWITCH 2 while powering the pedal on and copy it to the USB drive."); return false; }
+  try {
+    wsPort = await navigator.serial.requestPort();
+    await wsPort.open({ baudRate: WS_BAUD });
+    wsIro = wsPort.writable.getWriter();
+    wsOlvaso = wsPort.readable.getReader();
+    wsMaradek = "";
+    const v = await wsParancs("MC10?\n", s => s.indexOf("\n") >= 0, 1500);
+    const a = wsAzonositoBont(v);
+    if (!a) { await wsBont(); alert("This does not answer like an MC10 in editor mode.\nHold SWITCH 1 while powering the pedal on (switch 2 is the USB drive), then connect again."); return false; }
+    if (a.format !== 2) { await wsBont(); alert("The pedal expects config format " + a.format + ", this editor writes format 2.\nUpdate the firmware or the editor."); return false; }
+    wsAllapot(`Connected — firmware ${a.firmware}` + (a.nev ? `, config on pedal: “${a.nev}”` : ", no config stored (factory default)"));
+    wsFirmware = a.firmware;
+    await wsLista();
+    return true;
+  } catch(e){ wsAllapot("Connection failed: " + e.message); return false; }
+}
+
+async function wsBont(){
+  try { if (wsOlvaso) { await wsOlvaso.cancel(); wsOlvaso.releaseLock(); } } catch(e){}
+  try { if (wsIro) wsIro.releaseLock(); } catch(e){}
+  wsFuggoOlvasas = null;
+  try { if (wsPort) await wsPort.close(); } catch(e){}
+  wsPort = wsIro = wsOlvaso = null;
+}
+
+async function wsParancs(parancs, kesz, ms, adat){
+  if (!wsIro || !wsOlvaso) throw new Error("not connected");
+  wsMaradek = "";
+  await wsIro.write(new TextEncoder().encode(parancs));
+  if (adat) await wsIro.write(adat);
+  const dekoder = new TextDecoder();
+  const hatar = Date.now() + ms;
+
+  while (Date.now() < hatar) {
+    if (!wsFuggoOlvasas) wsFuggoOlvasas = wsOlvaso.read();
+    const ora = new Promise(r => setTimeout(() => r({ ido:true }), Math.max(50, hatar - Date.now())));
+    const eredmeny = await Promise.race([ wsFuggoOlvasas, ora ]);
+    if (eredmeny.ido) break;
+    wsFuggoOlvasas = null;
+    if (eredmeny.done) break;
+    if (eredmeny.value) wsMaradek += dekoder.decode(eredmeny.value, { stream:true });
+    if (kesz(wsMaradek)) return wsMaradek;
+  }
+  return wsMaradek;
+}
+
+function wsAllapot(sz){
+  for (const id of ["wsAllapot", "wsAllapot2"]) {
+    const e = document.getElementById(id);
+    if (e) e.textContent = sz;
+  }
+}
+
+function wsFajlnev(nev){
+  const ekezet = { "á":"A","é":"E","í":"I","ó":"O","ö":"O","ő":"O","ú":"U","ü":"U","ű":"U" };
+  let t = (nev||"").toLowerCase().replace(/[áéíóöőúüű]/g, c => ekezet[c].toLowerCase());
+  t = t.toUpperCase().replace(/[^A-Z0-9]/g, "").slice(0, 8);
+  return (t || "CONFIG") + ".TXT";
+}
+
+function wsListaBont(puffer){
+  const m = /^BEGIN (\d+)\n/.exec(puffer);
+  if (!m) return { kesz:false };
+  const veg = puffer.indexOf("\nEND\n", m[0].length - 1);
+  const sorok = puffer.slice(m[0].length).split("\n");
+  const db = +m[1], tetelek = [];
+  for (const sor of sorok) {
+    if (sor === "END") return { kesz:true, tetelek };
+    if (!sor) continue;
+    const r = /^(\S+) ([01]) (\d+) ?(.*)$/.exec(sor);
+    if (r) tetelek.push({ fajl:r[1], aktiv:r[2]==="1", bajt:+r[3], nev:r[4] });
+  }
+  return { kesz:false };
+}
+
+async function wsLista(){
+  if (!wsPort && !(await wsCsatlakoz())) return null;
+
+  const v = await wsParancs("LIST\n", p => wsListaBont(p).kesz || /ERROR\n/.test(p), 4000);
+  const r = wsListaBont(v);
+  if (!r.kesz) {
+    const regi = /ERROR/.test(v);
+    wsAllapot(regi
+      ? `This pedal runs firmware ${wsFirmware || "older than 6.19.0"}, which keeps a single config. Update the firmware to use several.`
+      : "Could not read the list from the pedal.");
+    const cel = document.getElementById("wsLista");
+    if (cel && regi) cel.innerHTML = '<div class="sor"><span class="px">Firmware 6.19.0 or newer is needed for several configs on the pedal.</span></div>';
+    return null;
+  }
+  wsListaRajzol(r.tetelek);
+  return r.tetelek;
+}
+
+function wsListaRajzol(tetelek){
+  const cel = document.getElementById("wsLista");
+  if (!cel) return;
+  try { cel.scrollIntoView({ block:"center" }); } catch(e){}
+  if (!tetelek.length) { cel.innerHTML = '<span class="px">No configs on the pedal yet.</span>'; return; }
+
+  cel.innerHTML = `<table class="wslista">` +
+    tetelek.map(t => `
+    <tr${t.aktiv ? ' class="aktiv"' : ""}>
+      <td class="mi">
+        <span class="nev">${t.nev || "(no name)"}</span><span class="wsaktiv">${t.aktiv ? "in use" : ""}</span>
+      </td>
+      <td class="fajlcella"><span class="fajl">${t.fajl}</span></td>
+      <td class="gombok">
+        <button data-akt="${t.fajl}"${t.aktiv ? " disabled" : ""}>Use this</button>
+        <button data-edit="${t.fajl}">Edit</button>
+        <button data-ren="${t.fajl}" data-nev="${(t.nev||"").replace(/"/g,"&quot;")}">Rename</button>
+        <button data-ow="${t.fajl}" data-nev="${(t.nev||"").replace(/"/g,"&quot;")}">Overwrite</button>
+        <button data-del="${t.fajl}">Delete</button>
+      </td>
+    </tr>`).join("") + "</table>";
+
+  cel.querySelectorAll("button[data-akt]").forEach(b => b.onclick = async () => {
+    try {
+      const v = await wsParancs("ACTIVE " + b.dataset.akt + "\n", p => /(OK|ERROR)\n/.test(p), 4000);
+      if (!/OK/.test(v)) { wsAllapot("The pedal refused it."); return; }
+      await wsBeolvas();
+      await wsLista();
+      wsAllapot("Loaded for editing. It becomes the pedal's setting after a restart — use “Restart pedal”.");
+    } catch(e) { wsAllapot("Failed: " + e.message); }
+  });
+
+  cel.querySelectorAll("button[data-edit]").forEach(b => b.onclick = async () => {
+    try {
+      await wsBeolvas(b.dataset.edit);
+      wsAllapot("Loaded " + b.dataset.edit + " for editing. The pedal's setting is unchanged.");
+    } catch(e) { wsAllapot("Failed: " + e.message); }
+  });
+
+  cel.querySelectorAll("button[data-ren]").forEach(b => b.onclick = async () => {
+    try {
+      const regiFajl = b.dataset.ren;
+      const ujNev = (prompt("New name for this config:", b.dataset.nev || "") || "").slice(0,23).trim();
+      if (!ujNev) return;
+      const ujFajl = wsFajlnev(ujNev);
+      const tetelek = await wsLista();
+      if (tetelek && ujFajl !== regiFajl && tetelek.some(t => t.fajl === ujFajl)
+          && !confirm(ujFajl + " already exists on the pedal. Overwrite it?")) return;
+
+      await wsBeolvas(regiFajl);
+      const { sor, adat } = wsIrasParancs(iniEloallit(ujNev), ujFajl);
+      const v = await wsParancs(sor, p => /(OK|ERROR)\n/.test(p), 8000, adat);
+      if (!/OK\n/.test(v)) { wsAllapot("The pedal refused it — nothing was changed."); return; }
+
+      const voltAktiv = tetelek && tetelek.some(t => t.fajl === regiFajl && t.aktiv);
+      if (voltAktiv) await wsParancs("ACTIVE " + ujFajl + "\n", p => /(OK|ERROR)\n/.test(p), 4000);
+      if (ujFajl !== regiFajl) await wsParancs("DELETE " + regiFajl + "\n", p => /(OK|ERROR)\n/.test(p), 4000);
+      await wsLista();
+      wsAllapot("Renamed to “" + ujNev + "” (" + ujFajl + ")."
+                + (voltAktiv ? " It stays the pedal's setting — restart to run it." : ""));
+    } catch(e) { wsAllapot("Failed: " + e.message); }
+  });
+
+  cel.querySelectorAll("button[data-ow]").forEach(b => b.onclick = async () => {
+    try {
+      const fajl = b.dataset.ow, nev = b.dataset.nev || fajl.replace(/\.TXT$/i, "");
+      const tetelek0 = await wsLista();
+      const aktiv = tetelek0 && tetelek0.some(t => t.fajl === fajl && t.aktiv);
+      if (!confirm(`Overwrite “${nev}” (${fajl}) with what is in the editor now?\n\n`+
+                   `The config keeps its name. What is stored on the pedal will be lost.`+
+                   (aktiv ? `\n\nThis is the config the pedal starts with — restart it to run the new one.` : ""))) return;
+      const { sor, adat } = wsIrasParancs(iniEloallit(nev), fajl);
+      const v = await wsParancs(sor, p => /(OK|ERROR)\n/.test(p), 8000, adat);
+      if (!/OK\n/.test(v)) { wsAllapot("The pedal refused it — nothing was changed."); return; }
+      await wsLista();
+      wsAllapot(`“${nev}” overwritten.` + (aktiv ? " Restart the pedal to run it." : ""));
+    } catch(e) { wsAllapot("Failed: " + e.message); }
+  });
+
+  kimenetTiltas(HIBA_VAN);
+
+  cel.querySelectorAll("button[data-del]").forEach(b => b.onclick = async () => {
+    if (!confirm("Delete " + b.dataset.del + " from the pedal?")) return;
+    const v = await wsParancs("DELETE " + b.dataset.del + "\n", p => /(OK|ERROR)\n/.test(p), 4000);
+    wsAllapot(/OK/.test(v) ? "Deleted." : "Could not delete it.");
+    await wsLista();
+  });
+}
+
+async function wsBeolvas(fajl){
+  if (!wsPort && !(await wsCsatlakoz())) return;
+  wsAllapot(fajl ? ("Reading " + fajl + "…") : "Reading from pedal…");
+  const v = await wsParancs("READ" + (fajl ? " " + fajl : "") + "\n", p => wsOlvasasBont(p).kesz, 5000);
+  const r = wsOlvasasBont(v);
+  if (!r.kesz) { wsAllapot("Reading failed — try again."); return; }
+  try {
+    K = iniBeolvas(r.szoveg);
+    mindenRajz();
+    wsAllapot("Loaded from pedal.");
+  } catch(e){ wsAllapot("The pedal sent a config this editor cannot read: " + e.message); }
+}
+
+async function wsUjraindit(){
+  if (!wsPort && !(await wsCsatlakoz())) return;
+  if (!confirm("Restart the pedal now?\n\nThe config you picked only takes effect after a restart. "
+             + "The pedal will leave config mode — to send or pick again, hold switch 1 while powering it on.")) return;
+  try { await wsParancs("REBOOT\n", p => /(OK|ERROR)\n/.test(p), 3000); } catch(e){}
+  await wsBont();
+  wsAllapot("The pedal is restarting with the selected config.");
+}
+
+async function wsKuldes(){
+  if (!wsPort && !(await wsCsatlakoz())) return;
+  const bajok = ellenorzes();
+  if (bajok.length) {
+    wsAllapot(`${bajok.length} error${bajok.length>1?"s":""} in the layout — nothing was sent. `+
+              `See the checks at the bottom of the page.`);
+    return;
+  }
+  const nev = (prompt("Config name (shown on the pedal at start-up):", "MY CONFIG") || "").slice(0,23);
+  if (!nev) return;
+  const fajl = wsFajlnev(nev);
+
+  const tetelek = await wsLista();
+  if (tetelek) {
+    const van = tetelek.some(t => t.fajl === fajl);
+    if (!van && tetelek.length >= 10) {
+      alert("The pedal already holds 10 configs. Delete one before sending a new one.");
+      return;
+    }
+    if (van && !confirm(fajl + " already exists on the pedal. Overwrite it?")) return;
+  }
+
+  const { sor, adat } = wsIrasParancs(iniEloallit(nev), fajl);
+  wsAllapot("Sending " + adat.length + " bytes as " + fajl + "…");
+  const v = await wsParancs(sor, p => /(OK|ERROR)\n/.test(p), 8000, adat);
+  if (/OK\n/.test(v)) {
+    wsAllapot("Saved as " + fajl + ". Pick it with “Use this”, then “Restart pedal” to run it.");
+    await wsLista();
+  } else {
+    wsAllapot("The pedal refused it. Nothing was changed — try sending again.");
+  }
+}
+
+document.getElementById("btnImport").onclick=()=>fajl.click();
+fajl.onchange=e=>{
+  const f=e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    const sz = r.result;
+    try{
+
+      if(sz.includes("[file]") && sz.includes("checksum = [")) { K = iniBeolvas(sz); }
+      else throw new Error("Not a config file. Open a config saved for the pedal.");
+      mindenRajz();
+    } catch(err){
+      alert("Cannot read the file:\n\n" + err.message);
+    }
+  };
+  r.readAsText(f);
+};
+
+function wsGomb(nev, fv){
+  document.getElementById(nev).onclick = async () => {
+    try {
+      if (!wsTamogatott()) {
+        wsAllapot("This browser cannot talk to the pedal (no WebSerial). Use desktop Chrome or Edge — or save the file and copy it via switch 2.");
+        return;
+      }
+
+      const elozoAllapot = document.getElementById("wsAllapot").textContent;
+      wsAllapot("Working…");
+      await fv();
+      if (document.getElementById("wsAllapot").textContent === "Working…") wsAllapot(elozoAllapot);
+    } catch(e) {
+      wsAllapot("Failed: " + (e && e.message ? e.message : e));
+    }
+  };
+}
+wsGomb("btnKapcs", wsCsatlakoz);
+wsGomb("btnLista", wsLista);
+wsGomb("btnOlvas", wsBeolvas);
+wsGomb("btnKuld",  wsKuldes);
+wsGomb("btnUjra",  wsUjraindit);
+
+document.getElementById("btnIni").onclick=()=>{
+  const nev = (prompt("Config name (shown on the pedal at start-up):", "MY CONFIG") || "").slice(0,23);
+  const sz = iniEloallit(nev);
+  const b = new Blob([sz], {type:"text/plain"});
+  const u = URL.createObjectURL(b), a = document.createElement("a");
+  a.href=u; a.download="MC10CFG.TXT"; a.click(); URL.revokeObjectURL(u);
+};
+
+function verzioCimkeRajz(){
+  const el = document.getElementById("verzioCimke");
+  if (el) el.textContent = `v${EDITOR_VERZIO}  ·  for FM3 Controller v${FIRMWARE_VERZIO} or newer`;
+}
+
+function mindenRajz(){ kNormalizal(K); verzioCimkeRajz(); gombokRajz(); kijelzoRajz(); kartyakRajz(); kombokRajz(); kijelzoSzerkRajz(); indulasRajz(); midiRajz(); csatRajz(); sorokRajz(); ellenorzes(); }
+mindenRajz();
+
+</script>
+</body>
+</html>
